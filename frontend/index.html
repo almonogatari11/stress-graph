@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -228,13 +228,13 @@
     
     <!-- Flow progress steps indicators -->
     <div class="hidden md:flex items-center gap-6 text-xs font-medium text-expo-body">
-      <span id="nav-step-1" class="text-expo-ink font-semibold flex items-center gap-1.5"><i class="fa-solid fa-circle-dot text-[10px] text-expo-textLink"></i> 1. Pengantar</span>
+      <span id="nav-step-1" class="text-expo-ink font-semibold flex items-center gap-1.5"><i class="fa-solid fa-circle-dot text-[10px] text-expo-textLink"></i> 1. Introduction</span>
       <i class="fa-solid fa-chevron-right text-[10px] text-expo-hairlineStrong"></i>
-      <span id="nav-step-2" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 2. Kuesioner PSS-10</span>
+      <span id="nav-step-2" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 2. PSS-10 Questionnaire</span>
       <i class="fa-solid fa-chevron-right text-[10px] text-expo-hairlineStrong"></i>
-      <span id="nav-step-3" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 3. Faktor Ekologi (ML)</span>
+      <span id="nav-step-3" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 3. Ecological Factors (ML)</span>
       <i class="fa-solid fa-chevron-right text-[10px] text-expo-hairlineStrong"></i>
-      <span id="nav-step-4" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 4. Analisis & Konseling</span>
+      <span id="nav-step-4" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 4. Analysis & Counseling</span>
     </div>
 
   </nav>
@@ -250,13 +250,13 @@
       <div class="max-w-[1200px] mx-auto px-6 pt-16 pb-24 relative z-10">
         <div class="text-center max-w-[850px] mx-auto">
           <!-- Premium badge -->
-          <div class="inline-flex items-center gap-2 bg-white/80 border border-expo-hairlineStrong rounded-full px-3.5 py-1.5 text-xs font-semibold text-expo-ink shadow-sm mb-6">
+            <div class="inline-flex items-center gap-2 bg-white/80 border border-expo-hairlineStrong rounded-full px-3.5 py-1.5 text-xs font-semibold text-expo-ink shadow-sm mb-6">
             <span class="w-2 h-2 rounded-full bg-expo-success animate-pulse"></span>
-            <span>Sistem Terverifikasi Klinis · Akurasi Model ML 88.64%</span>
+            <span>Clinically Verified System · ML Model Accuracy 88.64%</span>
           </div>
           
-          <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-expo-ink leading-[1.05] mb-6">
-            Mengukur tingkat stress mahasiswa dengan <span class="italic text-expo-textLink">presisi ilmiah</span>.
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-expo-ink leading-[1.05] mb-6">
+            Measuring student stress levels with <span class="italic text-expo-textLink">scientific precision</span>.
           </h1>
           <p class="text-lg text-expo-body font-normal leading-relaxed max-w-[680px] mx-auto mb-10">
             Menggabungkan metodologi psikologi terstandar <strong class="text-expo-ink">PSS-10</strong> dengan model klasifikasi <strong class="text-expo-ink">Random Forest</strong> untuk mendeteksi kontributor stres secara akurat.
@@ -264,19 +264,19 @@
 
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
             <button onclick="startAnalysisFlow()" class="bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-all duration-200 shadow-lg w-full sm:w-auto">
-              Mulai Analisis Mandiri <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+              Start Self-Assessment <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
             </button>
             <a href="#about-section" class="text-expo-textLink hover:underline text-sm font-semibold flex items-center gap-1.5 py-2">
-              Pelajari Metodologi Riset <i class="fa-solid fa-circle-info text-xs"></i>
+              Learn Research Methodology <i class="fa-solid fa-circle-info text-xs"></i>
             </a>
           </div>
 
           <div class="mx-auto mb-10 max-w-[780px] rounded-2xl border border-expo-hairlineStrong bg-white/90 p-5 shadow-soft backdrop-blur">
             <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div class="flex-1">
-                <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-expo-textLink font-semibold">AKSES PERSONAL</div>
-                <h3 class="mt-2 text-lg font-semibold text-expo-ink">Masuk untuk menyimpan hasil dan riwayat tes</h3>
-                <p class="mt-2 text-sm text-expo-body">Atau lanjut sebagai tamu jika ingin mencoba dulu tanpa daftar.</p>
+                <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-expo-textLink font-semibold">PERSONAL ACCESS</div>
+                <h3 class="mt-2 text-lg font-semibold text-expo-ink">Sign in to save results and test history</h3>
+                <p class="mt-2 text-sm text-expo-body">Or continue as a guest if you'd like to try without registering.</p>
               </div>
               <div class="w-full lg:w-[340px]">
                 <div id="auth-loggedin-state" class="hidden rounded-xl border border-expo-hairline bg-expo-canvasSoft p-4">
@@ -289,13 +289,13 @@
                   </div>
                 </div>
                 <div id="auth-form-state" class="space-y-3">
-                  <input id="auth-email" type="email" placeholder="Email kamu" class="w-full rounded-lg border border-expo-hairlineStrong bg-expo-canvasSoft px-3.5 py-2.5 text-sm outline-none focus:border-expo-ink" />
-                  <input id="auth-password" type="password" placeholder="Kata sandi" class="w-full rounded-lg border border-expo-hairlineStrong bg-expo-canvasSoft px-3.5 py-2.5 text-sm outline-none focus:border-expo-ink" />
+                  <input id="auth-email" type="email" placeholder="Your email" class="w-full rounded-lg border border-expo-hairlineStrong bg-expo-canvasSoft px-3.5 py-2.5 text-sm outline-none focus:border-expo-ink" />
+                  <input id="auth-password" type="password" placeholder="Password" class="w-full rounded-lg border border-expo-hairlineStrong bg-expo-canvasSoft px-3.5 py-2.5 text-sm outline-none focus:border-expo-ink" />
                   <div id="auth-toast" class="auth-toast hidden" aria-live="polite"></div>
                   <div class="flex flex-col gap-2 sm:flex-row">
-                    <button onclick="loginUser()" class="flex-1 rounded-lg bg-expo-primary px-3.5 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-expo-primaryActive">Masuk</button>
-                    <button onclick="registerUser()" class="flex-1 rounded-lg border border-expo-hairlineStrong bg-white px-3.5 py-2.5 text-sm font-semibold text-expo-ink transition-all duration-150 hover:bg-expo-canvasSoft">Daftar</button>
-                    <button onclick="continueAsGuest()" class="flex-1 rounded-lg border border-expo-hairlineStrong bg-white px-3.5 py-2.5 text-sm font-semibold text-expo-ink transition-all duration-150 hover:bg-expo-canvasSoft">Tamu</button>
+                    <button onclick="loginUser()" class="flex-1 rounded-lg bg-expo-primary px-3.5 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-expo-primaryActive">Sign In</button>
+                    <button onclick="registerUser()" class="flex-1 rounded-lg border border-expo-hairlineStrong bg-white px-3.5 py-2.5 text-sm font-semibold text-expo-ink transition-all duration-150 hover:bg-expo-canvasSoft">Register</button>
+                    <button onclick="continueAsGuest()" class="flex-1 rounded-lg border border-expo-hairlineStrong bg-white px-3.5 py-2.5 text-sm font-semibold text-expo-ink transition-all duration-150 hover:bg-expo-canvasSoft">Guest</button>
                   </div>
                 </div>
               </div>
@@ -331,9 +331,9 @@
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div class="border border-expo-hairline p-4 rounded-xl bg-expo-canvasSoft">
-                  <div class="font-mono text-[10px] text-expo-body mb-1">SKOR PENAPISAN PSS-10</div>
+                  <div class="font-mono text-[10px] text-expo-body mb-1">PSS-10 Screening Score</div>
                   <div class="text-3xl font-bold font-mono text-expo-ink">28<span class="text-lg text-expo-body font-normal">/40</span></div>
-                  <div class="text-xs text-[#ab6400] font-semibold mt-1">Stres Sedang - Tinggi</div>
+                  <div class="text-xs text-[#ab6400] font-semibold mt-1">Moderate - High Stress</div>
                 </div>
                 <div class="border border-expo-hairline p-4 rounded-xl bg-expo-canvasSoft">
                   <div class="font-mono text-[10px] text-expo-body mb-1">PROBABILITAS RF (ML)</div>
@@ -350,10 +350,10 @@
                   <div class="w-full bg-[#eb8e90] h-2/3 rounded-t" title="Anxiety Level"></div>
                 </div>
                 <div class="flex justify-between font-mono text-[9px] text-expo-body mt-2">
-                  <span>Beban Studi</span>
-                  <span>Kual. Tidur</span>
-                  <span>Dukungan Sos</span>
-                  <span>Kecemasan</span>
+                  <span>Study Load</span>
+                  <span>Sleep Qual.</span>
+                  <span>Social Support</span>
+                  <span>Anxiety</span>
                 </div>
               </div>
             </div>
@@ -383,15 +383,15 @@
         <!-- Method Strip Section -->
         <div id="about-section" class="mt-24 border-t border-expo-hairlineStrong pt-16">
           <div class="text-center max-w-[600px] mx-auto mb-12">
-            <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-bold">ALUR DIAGNOSTIK</span>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-expo-ink mt-2">Arsitektur Pengukuran Berlapis</h2>
+            <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-bold">DIAGNOSTIC FLOW</span>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-expo-ink mt-2">Layered Measurement Architecture</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300">
               <div class="w-8 h-8 rounded-lg bg-expo-surfaceStrong flex items-center justify-center font-mono text-xs font-bold text-expo-ink mb-4">01</div>
-              <h3 class="text-md font-bold text-expo-ink mb-2">Kuesioner Klinis PSS-10</h3>
+              <h3 class="text-md font-bold text-expo-ink mb-2">PSS-10 Clinical Questionnaire</h3>
               <p class="text-sm text-expo-body leading-relaxed">
-                Menilai persepsi kendali diri dan tekanan psikologis subjektif selama 30 hari terakhir dengan standar psikologi medis Cohen.
+                Assess perceived control and psychological stress over the past 30 days using the Cohen standard.
               </p>
             </div>
             <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300">
@@ -412,10 +412,10 @@
         </div>
 
         <!-- Disclaimer panel -->
-        <div class="mt-12 bg-expo-surfaceStrong border border-expo-hairlineStrong p-6 rounded-xl text-xs text-expo-body flex flex-col md:flex-row items-start md:items-center gap-4">
-          <span class="bg-expo-primary text-white font-mono font-bold text-[10px] px-2.5 py-1 rounded-md tracking-wider">BATASAN MEDIS</span>
+          <div class="mt-12 bg-expo-surfaceStrong border border-expo-hairlineStrong p-6 rounded-xl text-xs text-expo-body flex flex-col md:flex-row items-start md:items-center gap-4">
+          <span class="bg-expo-primary text-white font-mono font-bold text-[10px] px-2.5 py-1 rounded-md tracking-wider">MEDICAL LIMITATION</span>
           <p class="leading-relaxed">
-            Stressgraph merupakan instrumen skrining dini ilmiah yang bersifat informatif, bukan diagnosis klinis. Hasil instrumen tidak menggantikan kewenangan evaluasi medis dari psikolog atau psikiater berlisensi.
+            Stressgraph is an informational screening tool and not a clinical diagnosis. Results do not replace professional evaluation by licensed clinicians.
           </p>
         </div>
       </div>
@@ -428,22 +428,22 @@
       <div id="identitas-step" class="space-y-8">
         <div>
           <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-semibold block mb-2">LANGKAH PERTAMA</span>
-          <h2 class="text-3xl font-bold tracking-tight text-expo-ink">Personalisasi Sesi Anda</h2>
-          <p class="text-sm text-expo-body mt-2">Nama dan jurusan bersifat opsional. Data ini digunakan untuk memberikan analisis personal dalam laporan akhir Anda.</p>
+          <h2 class="text-3xl font-bold tracking-tight text-expo-ink">Personalize Your Session</h2>
+          <p class="text-sm text-expo-body mt-2">Name and program are optional. This helps personalize the final report.</p>
         </div>
 
         <div class="border border-expo-hairline bg-white p-8 rounded-xl shadow-soft space-y-6">
           <div class="space-y-2">
-            <label for="input-nama" class="block text-xs font-semibold text-expo-ink uppercase tracking-wider">NAMA ANDA (OPSIONAL)</label>
+            <label for="input-nama" class="block text-xs font-semibold text-expo-ink uppercase tracking-wider">YOUR NAME (OPTIONAL)</label>
             <input type="text" id="input-nama" placeholder="Contoh: Alyas" class="w-full h-11 border border-expo-hairlineStrong focus:border-expo-ink focus:border-2 focus:ring-0 rounded-lg px-4 text-sm bg-expo-canvasSoft transition-all duration-150 outline-none" />
           </div>
           <div class="space-y-2">
-            <label for="input-jurusan" class="block text-xs font-semibold text-expo-ink uppercase tracking-wider">JURUSAN / PROGRAM STUDI (OPSIONAL)</label>
-            <input type="text" id="input-jurusan" placeholder="Contoh: Psikologi Klinis" class="w-full h-11 border border-expo-hairlineStrong focus:border-expo-ink focus:border-2 focus:ring-0 rounded-lg px-4 text-sm bg-expo-canvasSoft transition-all duration-150 outline-none" />
+            <label for="input-jurusan" class="block text-xs font-semibold text-expo-ink uppercase tracking-wider">PROGRAM / MAJOR (OPTIONAL)</label>
+            <input type="text" id="input-jurusan" placeholder="e.g. Clinical Psychology" class="w-full h-11 border border-expo-hairlineStrong focus:border-expo-ink focus:border-2 focus:ring-0 rounded-lg px-4 text-sm bg-expo-canvasSoft transition-all duration-150 outline-none" />
           </div>
 
           <button onclick="startQuestionnaire()" class="w-full h-11 bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold rounded-lg transition-all duration-150 flex items-center justify-center gap-2">
-            Lanjutkan ke PSS-10 <i class="fa-solid fa-arrow-right text-xs"></i>
+            Continue to PSS-10 <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
       </div>
@@ -453,8 +453,8 @@
         <!-- Progress bar tracking -->
         <div class="space-y-2">
           <div class="flex justify-between items-baseline font-mono text-[11px] text-expo-body font-bold">
-            <span id="question-number">PERTANYAAN 01 / 10</span>
-            <span class="tracking-widest uppercase text-expo-textLink">RIWAYAT 30 HARI TERAKHIR</span>
+            <span id="question-number">QUESTION 01 / 10</span>
+            <span class="tracking-widest uppercase text-expo-textLink">PAST 30 DAYS</span>
           </div>
           <div class="h-1.5 w-full bg-expo-hairline rounded-full overflow-hidden">
             <div id="progress-fill" class="h-full bg-expo-textLink transition-all duration-300" style="width: 10%"></div>
@@ -464,7 +464,7 @@
         <div class="border border-expo-hairline bg-white p-8 rounded-xl shadow-soft space-y-8">
           <div class="space-y-2">
             <h3 id="question-text" class="text-xl md:text-2xl font-bold tracking-tight text-expo-ink leading-relaxed">
-              Memuat pertanyaan instrumen...
+              Loading questionnaire...
             </h3>
           </div>
 
@@ -475,10 +475,10 @@
 
           <div class="flex items-center justify-between pt-4 border-t border-expo-hairline">
             <button id="btn-prev" onclick="prevQuestion()" class="border border-expo-hairlineStrong hover:bg-expo-canvasSoft text-expo-ink font-semibold px-4 py-2.5 rounded-lg text-sm transition-all duration-200">
-              <i class="fa-solid fa-chevron-left mr-1.5"></i> Sebelumnya
+              <i class="fa-solid fa-chevron-left mr-1.5"></i> Previous
             </button>
             <button id="btn-next" onclick="nextQuestion()" disabled class="bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
-              Berikutnya <i class="fa-solid fa-chevron-right ml-1.5"></i>
+              Next <i class="fa-solid fa-chevron-right ml-1.5"></i>
             </button>
           </div>
         </div>
@@ -490,7 +490,7 @@
       <div class="mb-8">
         <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-semibold block mb-2">PARAMETER MACHINE LEARNING</span>
         <h2 class="text-3xl font-bold tracking-tight text-expo-ink">Faktor Ekologi & Keseharian</h2>
-        <p class="text-sm text-expo-body mt-2">Model klasifikasi Random Forest memproses 20 variabel biologis, akademis, dan sosial untuk menghasilkan prediksi yang presisi.</p>
+        <p class="text-sm text-expo-body mt-2">The Random Forest classifier processes 20 biological, academic, and social variables to produce a precise prediction.</p>
       </div>
 
       <!-- Category Tabs for 20 Features -->
@@ -514,10 +514,10 @@
       <!-- Navigation inside ML step -->
       <div class="mt-12 border-t border-expo-hairlineStrong pt-8 flex items-center justify-between">
         <button onclick="goToView('kuesioner')" class="border border-expo-hairlineStrong hover:bg-expo-canvasSoft text-expo-ink font-semibold px-4 py-2.5 rounded-lg text-sm transition-all duration-200">
-          <i class="fa-solid fa-chevron-left mr-1.5"></i> Kembali ke PSS-10
+          <i class="fa-solid fa-chevron-left mr-1.5"></i> Back to PSS-10
         </button>
         <button id="btn-submit-ml" onclick="submitMLFeatures()" class="h-12 bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold px-8 rounded-lg shadow-lg transition-all duration-150 flex items-center justify-center gap-2">
-          Hasilkan Laporan Analisis Akhir <i class="fa-solid fa-circle-nodes"></i>
+          Generate Final Analysis Report <i class="fa-solid fa-circle-nodes"></i>
         </button>
       </div>
     </section>
@@ -542,13 +542,13 @@
               </div>
             </button>
             <div id="result-menu-panel" class="hidden absolute right-0 mt-3 w-48 overflow-hidden rounded-2xl border border-expo-hairline bg-white shadow-soft ring-1 ring-black/5">
-              <button onclick="restartTest(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-ink hover:bg-expo-canvasSoft transition-all duration-150">Mulai ulang tes</button>
+              <button onclick="restartTest(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-ink hover:bg-expo-canvasSoft transition-all duration-150">Restart Test</button>
               <button onclick="openChatPage(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-ink hover:bg-expo-canvasSoft transition-all duration-150">Chatbot</button>
-              <button onclick="logoutUser(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-error hover:bg-expo-canvasSoft transition-all duration-150">Logout</button>
+              <button onclick="logoutUser(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-error hover:bg-expo-canvasSoft transition-all duration-150">Sign Out</button>
             </div>
           </div>
           <button onclick="window.print()" class="border border-expo-hairlineStrong hover:bg-expo-canvasSoft text-expo-ink font-semibold px-4 py-2 rounded-lg text-xs tracking-wide uppercase transition-all duration-150">
-            <i class="fa-solid fa-print mr-1.5"></i> Cetak Hasil
+            <i class="fa-solid fa-print mr-1.5"></i> Print Results
           </button>
         </div>
       </div>
@@ -567,8 +567,8 @@
           </div>
           <div>
             <span id="result-pss-category" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
-              Memproses...
-            </span>
+                Processing...
+              </span>
           </div>
           <p class="text-xs text-expo-body leading-relaxed">
             Skor dihitung berdasarkan skala likert dari 10 pertanyaan persepsi. Kategori mencerminkan seberapa berat beban pikiran subjektif Anda dalam satu bulan terakhir.
@@ -587,8 +587,8 @@
           </div>
           <div>
             <span id="result-ml-category" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
-              Memproses...
-            </span>
+                Processing...
+              </span>
           </div>
           <p class="text-xs text-expo-body leading-relaxed">
             Probabilitas dihasilkan dari pohon keputusan Random Forest berdasarkan input 20 variabel bio-sosial-akademik pendukung Anda.
@@ -601,8 +601,8 @@
         <h3 class="text-sm font-semibold text-expo-ink uppercase tracking-wider mb-6">Matriks Korelasi Komparatif</h3>
         <div class="relative h-[250px] w-full">
           <canvas id="resultChart"></canvas>
-          <div id="chart-fallback" class="hidden absolute inset-0 flex items-center justify-center bg-expo-canvasSoft text-xs text-expo-body">
-            Fungsi visualisasi grafik memerlukan koneksi modul Chart.js.
+            <div id="chart-fallback" class="hidden absolute inset-0 flex items-center justify-center bg-expo-canvasSoft text-xs text-expo-body">
+            Chart visualization requires a working Chart.js module.
           </div>
         </div>
       </div>

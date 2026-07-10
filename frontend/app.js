@@ -74,7 +74,7 @@ async function apiCall(path, options = {}) {
     });
     if (!res.ok) {
       const errBody = await res.json().catch(() => ({}));
-      throw new Error(errBody.detail || `Request gagal (${res.status})`);
+      throw new Error(errBody.detail || `Request failed (${res.status})`);
     }
     return await res.json();
   } catch (err) {
@@ -109,7 +109,7 @@ function renderQuestion() {
   const total = state.questions.length;
 
   document.getElementById("question-number").textContent =
-    `PERTANYAAN ${String(idx + 1).padStart(2, "0")} / ${total}`;
+    `QUESTION ${String(idx + 1).padStart(2, "0")} / ${total}`;
   document.getElementById("question-text").textContent = q.text;
   document.getElementById("progress-fill").style.width = `${((idx + 1) / total) * 100}%`;
 
@@ -128,7 +128,7 @@ function renderQuestion() {
   prevBtn.disabled = idx === 0;
   prevBtn.style.visibility = idx === 0 ? "hidden" : "visible";
   nextBtn.disabled = state.answers[idx] === null;
-  nextBtn.textContent = idx === total - 1 ? "Lihat Hasil →" : "Selanjutnya →";
+  nextBtn.textContent = idx === total - 1 ? "View Results →" : "Next →";
 }
 
 function selectAnswer(value) {
@@ -156,7 +156,7 @@ async function nextQuestion() {
 async function submitPSS10() {
   const nextBtn = document.getElementById("btn-next");
   nextBtn.disabled = true;
-  nextBtn.innerHTML = `<span class="loading-spinner"></span> Memproses...`;
+  nextBtn.innerHTML = `<span class="loading-spinner"></span> Processing...`;
 
   try {
     const result = await apiCall("/api/pss10/submit", {
@@ -174,8 +174,8 @@ async function submitPSS10() {
     await renderMLForm();
   } catch (err) {
     nextBtn.disabled = false;
-    nextBtn.textContent = "Lihat Hasil →";
-    alert("Gagal mengirim kuesioner. Pastikan server backend berjalan.");
+    nextBtn.textContent = "View Results →";
+    alert("Failed to submit questionnaire. Ensure the backend server is running.");
   }
 }
 
@@ -184,26 +184,26 @@ async function submitPSS10() {
 // ---------------------------------------------------------------------------
 
 const ML_FIELD_LABELS = {
-  anxiety_level: "Tingkat kecemasan (0-21)",
-  self_esteem: "Kepercayaan diri (0-30)",
-  mental_health_history: "Riwayat masalah kesehatan mental (0=Tidak, 1=Ya)",
-  depression: "Tingkat depresi (0-27)",
-  headache: "Frekuensi sakit kepala (0=Tidak pernah, 5=Selalu)",
-  blood_pressure: "Tekanan darah (1=Normal, 2=Di atas normal, 3=Tinggi)",
-  sleep_quality: "Kualitas tidur (0=Sangat buruk, 5=Sangat baik)",
-  breathing_problem: "Masalah pernapasan (0=Tidak, 5=Sering)",
-  noise_level: "Tingkat kebisingan lingkungan (0=Sangat sepi, 5=Sangat bising)",
-  living_conditions: "Kondisi tempat tinggal (0=Sangat buruk, 5=Sangat baik)",
-  safety: "Rasa aman di lingkungan (0=Tidak aman, 5=Sangat aman)",
-  basic_needs: "Pemenuhan kebutuhan dasar (0=Tidak terpenuhi, 5=Terpenuhi)",
-  academic_performance: "Performa akademik (0=Sangat buruk, 5=Sangat baik)",
-  study_load: "Beban belajar/tugas (0=Sangat ringan, 5=Sangat berat)",
-  teacher_student_relationship: "Hubungan dengan dosen/guru (0=Sangat buruk, 5=Sangat baik)",
-  future_career_concerns: "Kekhawatiran karir masa depan (0=Tidak khawatir, 5=Sangat khawatir)",
-  social_support: "Dukungan sosial dari keluarga/teman (0=Tidak ada, 5=Sangat kuat)",
-  peer_pressure: "Tekanan dari teman sebaya (0=Tidak ada, 5=Sangat tinggi)",
-  extracurricular_activities: "Keaktifan di kegiatan ekstrakurikuler (0=Tidak aktif, 5=Sangat aktif)",
-  bullying: "Pengalaman perundungan/bullying (0=Tidak pernah, 5=Sering)",
+  anxiety_level: "Anxiety level (0-21)",
+  self_esteem: "Self-esteem (0-30)",
+  mental_health_history: "History of mental health issues (0=No, 1=Yes)",
+  depression: "Depression severity (0-27)",
+  headache: "Headache frequency (0=Never, 5=Always)",
+  blood_pressure: "Blood pressure (1=Normal, 2=Above normal, 3=High)",
+  sleep_quality: "Sleep quality (0=Very poor, 5=Very good)",
+  breathing_problem: "Breathing problems (0=None, 5=Frequent)",
+  noise_level: "Room noise level (0=Very quiet, 5=Very noisy)",
+  living_conditions: "Living conditions (0=Very poor, 5=Very good)",
+  safety: "Perceived safety (0=Not safe, 5=Very safe)",
+  basic_needs: "Basic needs fulfillment (0=Not met, 5=Met)",
+  academic_performance: "Academic performance (0=Very poor, 5=Very good)",
+  study_load: "Study load (0=Very light, 5=Very heavy)",
+  teacher_student_relationship: "Teacher-student relationship (0=Very poor, 5=Very good)",
+  future_career_concerns: "Future career concerns (0=Not worried, 5=Very worried)",
+  social_support: "Social support (0=None, 5=Strong)",
+  peer_pressure: "Peer pressure (0=None, 5=High)",
+  extracurricular_activities: "Extracurricular activity level (0=None, 5=High)",
+  bullying: "Bullying experience (0=Never, 5=Often)",
 };
 
 async function renderMLForm() {
@@ -235,7 +235,7 @@ async function submitMLFeatures() {
 
   const btn = document.getElementById("btn-submit-ml");
   btn.disabled = true;
-  btn.innerHTML = `<span class="loading-spinner"></span> Memproses...`;
+  btn.innerHTML = `<span class="loading-spinner"></span> Processing...`;
 
   try {
     const result = await apiCall("/api/ml/predict", {
@@ -250,8 +250,8 @@ async function submitMLFeatures() {
     goToView("hasil");
   } catch (err) {
     btn.disabled = false;
-    btn.textContent = "Lihat Hasil Pengukuran →";
-    alert("Gagal memproses prediksi ML. Coba lagi.");
+    btn.textContent = "View Final Results →";
+    alert("Failed to process ML prediction. Please try again.");
   }
 }
 
@@ -261,22 +261,17 @@ async function submitMLFeatures() {
 
 function getInterpretation(pssCategory, mlCategory) {
   const categories = [pssCategory, mlCategory];
-  const tinggi = categories.filter(c => c === "Tinggi").length;
-  const sedang = categories.filter(c => c === "Sedang").length;
+  const high = categories.filter(c => c === "High").length;
+  const moderate = categories.filter(c => c === "Moderate").length;
 
-  if (tinggi >= 2) {
-    return "Kedua metode menunjukkan tingkat stress TINGGI. Sangat disarankan untuk segera " +
-      "menghubungi layanan konseling kampus atau berbicara dengan orang yang dipercaya. " +
-      "Jangan ragu untuk mencari bantuan profesional.";
-  } else if (tinggi === 1) {
-    return "Terdapat indikasi stress yang cukup signifikan. Pertimbangkan untuk mengatur " +
-      "jadwal lebih baik, istirahat cukup, dan berbagi cerita dengan teman atau konselor kampus.";
-  } else if (sedang >= 1) {
-    return "Tingkat stress kamu berada di level sedang. Pertahankan kebiasaan positif seperti " +
-      "olahraga, tidur cukup, dan jaga koneksi sosial dengan teman dan keluarga.";
+  if (high >= 2) {
+    return "Both methods indicate HIGH stress. Please contact campus counseling or a trusted professional as soon as possible.";
+  } else if (high === 1) {
+    return "There is a significant indication of stress. Consider improving rest, time planning, and sharing your concerns with friends or campus counselors.";
+  } else if (moderate >= 1) {
+    return "Your stress level is moderate. Maintain positive habits like exercise, adequate sleep, and social connection.";
   } else {
-    return "Tingkat stress kamu tergolong rendah. Tetap pertahankan gaya hidup sehat dan " +
-      "keseimbangan antara belajar dan istirahat.";
+    return "Your stress level is low. Keep up healthy habits and balance between study and rest.";
   }
 }
 
@@ -284,7 +279,7 @@ function renderFinalResult() {
   // Nama
   if (state.nama) {
     document.getElementById("result-nama-display").textContent =
-      `Hasil untuk: ${state.nama}${state.jurusan ? " · " + state.jurusan : ""}`;
+      `Results for: ${state.nama}${state.jurusan ? " · " + state.jurusan : ""}`;
   }
 
   // PSS-10
@@ -334,7 +329,7 @@ function renderChart(pssScore, mlConfidence, pssCategory, mlCategory) {
   const pssNormalized = Math.round((pssScore / 40) * 100);
 
   // Warna berdasarkan kategori
-  const colorMap = { Rendah: "#6B9080", Sedang: "#D98E3F", Tinggi: "#C0533E" };
+  const colorMap = { Low: "#6B9080", Moderate: "#D98E3F", High: "#C0533E" };
   const pssColor = colorMap[pssCategory] || "#0b66d1";
   const mlColor  = colorMap[mlCategory]  || "#0b66d1";
 
@@ -386,9 +381,8 @@ function goToChat() {
     state.chatStarted = true;
     const greetName = state.nama ? `, ${state.nama}` : "";
     addChatBubble("assistant",
-      `Halo${greetName}! Saya di sini untuk mendengarkan. ` +
-      `Ceritakan apapun yang sedang kamu rasakan — tekanan kuliah, ` +
-      `masalah sehari-hari, atau hal yang bikin kamu semangat. 😊`
+      `Hello${greetName}! I'm here to listen. ` +
+      `Share whatever you're feeling — coursework pressure, daily worries, or things that lift you up. 😊`
     );
   }
 }
@@ -460,7 +454,7 @@ async function sendChatMessage() {
   } catch (err) {
     removeTypingIndicator();
     addChatBubble("assistant",
-      "Maaf, terjadi gangguan koneksi. Coba kirim pesan lagi ya."
+      "Sorry, there's a connection issue. Please try sending your message again."
     );
   } finally {
     sendBtn.disabled = false;

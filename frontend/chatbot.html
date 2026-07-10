@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,11 +23,11 @@
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#0b66d1] font-semibold">AI SUPPORT CHAT</p>
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Sesi Curhat dengan AI Stressgraph</h1>
-        <p class="text-sm text-[#4b5563] mt-1">Halaman khusus untuk berbagi perasaan, beban akademik, atau kebutuhan dukungan.</p>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">AI Support Chat Session</h1>
+        <p class="text-sm text-[#4b5563] mt-1">A dedicated page for sharing feelings, academic load, or support needs.</p>
       </div>
       <button onclick="goBackToResults()" class="inline-flex items-center justify-center rounded-lg border border-[#d0e2fb] bg-white px-4 py-2 text-sm font-semibold text-[#072147] hover:bg-[#eef6ff] transition-all">
-        <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke hasil
+        <i class="fa-solid fa-arrow-left mr-2"></i> Back to results
       </button>
     </div>
 
@@ -36,7 +36,7 @@
         <div class="flex items-center justify-between gap-3">
           <div>
             <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e8f3ff]">SUPPORTIVE WELLBEING AGENT</div>
-            <h2 class="text-lg font-semibold mt-1">Halo, saya siap mendengarkan</h2>
+            <h2 class="text-lg font-semibold mt-1">Hello, I'm ready to listen</h2>
           </div>
           <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
         </div>
@@ -45,37 +45,37 @@
       <div class="h-[460px] sm:h-[560px] flex flex-col bg-[#f2f8ff]">
         <div id="chat-messages" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4"></div>
 
-        <div id="chat-typing" class="hidden px-6 py-2 flex items-center gap-1 bg-white border-t border-[#eef6ff]">
+          <div id="chat-typing" class="hidden px-6 py-2 flex items-center gap-1 bg-white border-t border-[#eef6ff]">
           <div class="w-1.5 h-1.5 bg-[#0b66d1] rounded-full animate-bounce"></div>
           <div class="w-1.5 h-1.5 bg-[#0b66d1] rounded-full animate-bounce [animation-delay:0.2s]"></div>
           <div class="w-1.5 h-1.5 bg-[#0b66d1] rounded-full animate-bounce [animation-delay:0.4s]"></div>
-          <span class="text-[11px] text-[#4b5563] font-mono ml-2">AI sedang menyiapkan balasan...</span>
+          <span class="text-[11px] text-[#4b5563] font-mono ml-2">AI is preparing a reply...</span>
         </div>
 
         <div class="p-4 border-t border-[#eef6ff] bg-white flex flex-col sm:flex-row gap-3">
-          <input id="chat-input" type="text" placeholder="Ceritakan apa yang sedang kamu rasakan..." class="flex-1 h-11 rounded-lg border border-[#d0e2fb] bg-[#f2f8ff] px-4 text-sm outline-none focus:border-[#0b66d1]" onkeydown="if(event.key==='Enter') sendChatMessage()" />
-          <button id="btn-send-chat" onclick="sendChatMessage()" class="bg-[#0b66d1] hover:bg-[#084e9a] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all">Kirim</button>
+          <input id="chat-input" type="text" placeholder="Share what you're feeling..." class="flex-1 h-11 rounded-lg border border-[#d0e2fb] bg-[#f2f8ff] px-4 text-sm outline-none focus:border-[#0b66d1]" onkeydown="if(event.key==='Enter') sendChatMessage()" />
+          <button id="btn-send-chat" onclick="sendChatMessage()" class="bg-[#0b66d1] hover:bg-[#084e9a] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all">Send</button>
         </div>
       </div>
 
       <div id="crisis-banner" class="hidden border-t border-red-200 bg-red-50 p-4 text-sm text-red-700">
-        <strong>Jika situasinya terasa berat, jangan dipaksa sendirian.</strong> Hubungi layanan dukungan atau tenaga profesional segera.
+        <strong>If the situation feels serious, don't handle it alone.</strong> Contact support services or a professional immediately.
       </div>
 
       <!-- Crisis modal overlay -->
       <div id="crisis-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
         <div class="absolute inset-0 bg-black/40"></div>
         <div class="relative max-w-lg w-full mx-4 bg-white rounded-2xl shadow-lg p-6 border">
-          <h3 class="text-lg font-semibold text-red-700">Peringatan: Terdeteksi kata-kata krisis</h3>
-          <p class="text-sm text-gray-700 mt-2">Kami menemukan kata-kata yang mengindikasikan kamu mungkin sedang dalam situasi yang berat atau berisiko. Jika kamu merasa membahayakan diri sendiri, segera hubungi layanan darurat atau tenaga profesional.</p>
+          <h3 class="text-lg font-semibold text-red-700">Warning: Crisis language detected</h3>
+          <p class="text-sm text-gray-700 mt-2">We detected language that may indicate you are in a serious or at-risk situation. If you feel you may harm yourself, contact emergency services or a professional immediately.</p>
           <ul class="mt-3 text-sm text-gray-700 list-disc list-inside">
-            <li><strong>Layanan Darurat (Indonesia):</strong> Telepon 119 ext 8</li>
-            <li><strong>Dukungan Kampus:</strong> Hubungi layanan konseling kampus atau konselor fakultas</li>
+            <li><strong>Emergency Services (Indonesia):</strong> Call 119 ext 8</li>
+            <li><strong>Campus Support:</strong> Contact campus counseling services or faculty counselor</li>
           </ul>
 
           <div class="mt-4 flex gap-2">
-            <a id="btn-resources" target="_blank" rel="noreferrer" href="https://www.sejiwa.id" class="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm">Saran & Konsultasi</a>
-            <button id="btn-continue-chat" class="inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm">Lanjutkan Chat</button>
+            <a id="btn-resources" target="_blank" rel="noreferrer" href="https://www.sejiwa.id" class="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm">Resources & Support</a>
+            <button id="btn-continue-chat" class="inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm">Continue Chat</button>
           </div>
         </div>
       </div>
@@ -105,7 +105,7 @@
         });
         if (!res.ok) {
           const errBody = await res.json().catch(() => ({}));
-          throw new Error(errBody.detail || `Request gagal (${res.status})`);
+          throw new Error(errBody.detail || `Request failed (${res.status})`);
         }
         return await res.json();
       } catch (err) {
@@ -218,7 +218,7 @@
         appendChatBubble('assistant', result.reply);
       } catch (err) {
         hideTypingIndicator();
-        appendChatBubble('assistant', 'Maaf, koneksi chat sedang bermasalah. Coba lagi sebentar ya.');
+        appendChatBubble('assistant', 'Sorry, chat connection is currently unstable. Please try again shortly.');
       } finally {
         sendBtn.disabled = false;
         input.disabled = false;
