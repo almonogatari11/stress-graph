@@ -1,0 +1,16 @@
+{
+  "name": "stressgraph",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.2",
+    "tailwindcss": "^4.3.2"
+  },
+  "devDependencies": {
+    "vite": "^6.4.3"
+  }
+}

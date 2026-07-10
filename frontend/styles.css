@@ -1,0 +1,770 @@
+/* ==========================================================================
+   DESIGN SYSTEM — "Instrumen Pengukuran"
+   Konsep: PSS-10 adalah alat ukur ilmiah, jadi visualnya mengambil bahasa
+   instrumen laboratorium/medis (kertas grafik, garis EKG, angka presisi)
+   — bukan estetika "wellness app" pastel yang generic.
+   ========================================================================== */
+
+:root {
+  /* --- Warna: EduTech (Akademik) --- */
+  --paper: #f2f8ff;
+  --paper-line: #e6eef9;
+  --ink: #072147;
+  --ink-soft: #4b5563;
+  --data-blue: #0b66d1;
+  --data-blue-soft: #e8f3ff;
+  --cta: #ffb703;
+  --alert-amber: #D98E3F;
+  --alert-amber-soft: #FBF1E2;
+  --alert-red: #C0533E;
+  --alert-red-soft: #FAEAE5;
+  --calm-green: #5B8073;
+  --calm-green-soft: #E9F1ED;
+  --white: #FFFFFF;
+
+  /* --- Tipografi --- */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* --- Layout --- */
+  --max-width: 760px;
+  --radius: 6px;
+  --shadow-soft: 0 2px 12px rgba(26, 29, 35, 0.06);
+  --shadow-card: 0 4px 24px rgba(26, 29, 35, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    linear-gradient(var(--paper-line) 1px, transparent 1px);
+  background-size: 100% 32px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Skip link / focus visibility (accessibility) --- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--data-blue);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   LAYOUT UMUM
+   ========================================================================== */
+
+.app-shell {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.view {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   SIGNATURE ELEMENT — Garis Seismograf/EKG
+   Elemen visual berulang yang merepresentasikan "gelombang" tingkat stress.
+   Muncul di header tiap halaman sebagai motif konsisten, bukan dekorasi kosong.
+   ========================================================================== */
+
+.ekg-line {
+  width: 100%;
+  height: 36px;
+  display: block;
+  margin: 0 auto;
+}
+
+.ekg-line path {
+  fill: none;
+  stroke: var(--data-blue);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ==========================================================================
+   HEADER / NAV
+   ========================================================================== */
+
+.site-header {
+  padding: 28px 0 16px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.brand-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark .dot {
+  color: var(--data-blue);
+}
+
+.brand-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   HERO / LANDING
+   ========================================================================== */
+
+.hero {
+  padding: 56px 0 40px;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--data-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--calm-green);
+  display: inline-block;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 5vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin-bottom: 20px;
+  max-width: 12ch;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--data-blue);
+}
+
+.hero p {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin-bottom: 32px;
+}
+
+.method-strip {
+  display: flex;
+  gap: 28px;
+  margin: 36px 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--paper-line);
+  border-bottom: 1px solid var(--paper-line);
+  flex-wrap: wrap;
+}
+
+.method-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.method-item .num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--data-blue);
+}
+
+.method-item .label {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--shadow-card);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.disclaimer-box {
+  background: var(--data-blue-soft);
+  border-left: 3px solid var(--data-blue);
+  padding: 16px 20px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+}
+
+.disclaimer-box strong {
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   FORM IDENTITAS
+   ========================================================================== */
+
+.card {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--paper-line);
+}
+
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.field-group .optional-tag {
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.field-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--paper-line);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: var(--paper);
+  transition: border-color 0.15s ease;
+}
+
+.field-group input:focus {
+  border-color: var(--data-blue);
+  outline: none;
+}
+
+/* ==========================================================================
+   KUESIONER PSS-10
+   ========================================================================== */
+
+.progress-track {
+  height: 3px;
+  background: var(--paper-line);
+  border-radius: 2px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--data-blue);
+  border-radius: 2px;
+  transition: width 0.35s ease;
+}
+
+.question-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+
+.question-number {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--data-blue);
+  letter-spacing: 0.04em;
+}
+
+.question-period {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.question-text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.35;
+  margin-bottom: 32px;
+  min-height: 90px;
+}
+
+.likert-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.likert-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1.5px solid var(--paper-line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  background: var(--white);
+}
+
+.likert-option:hover {
+  border-color: var(--data-blue);
+  background: var(--data-blue-soft);
+}
+
+.likert-option.selected {
+  border-color: var(--data-blue);
+  background: var(--data-blue-soft);
+}
+
+.likert-option .likert-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-soft);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.likert-option.selected .likert-dot {
+  border-color: var(--data-blue);
+  background: var(--data-blue);
+}
+
+.likert-option.selected .likert-dot::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--white);
+}
+
+.likert-option .likert-label {
+  font-size: 0.95rem;
+}
+
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   CHAT AI
+   ========================================================================== */
+
+.chat-intro {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.chat-intro h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.chat-intro p {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  max-width: 42ch;
+  margin: 0 auto;
+}
+
+.chat-window {
+  background: var(--white);
+  border-radius: 10px;
+  border: 1px solid var(--paper-line);
+  box-shadow: var(--shadow-card);
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.chat-bubble.assistant {
+  background: var(--data-blue-soft);
+  color: var(--ink);
+  align-self: flex-start;
+  border-bottom-left-radius: 3px;
+}
+
+.chat-bubble.user {
+  background: var(--ink);
+  color: var(--paper);
+  align-self: flex-end;
+  border-bottom-right-radius: 3px;
+}
+
+.chat-bubble.typing {
+  display: flex;
+  gap: 4px;
+  padding: 16px;
+  align-items: center;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--data-blue);
+  animation: typingBounce 1.2s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+  border-top: 1px solid var(--paper-line);
+}
+
+.chat-input-row input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--paper-line);
+  border-radius: 24px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  background: var(--paper);
+}
+
+.chat-input-row input:focus {
+  border-color: var(--data-blue);
+  outline: none;
+}
+
+.chat-input-row button {
+  border-radius: 24px;
+  padding: 12px 22px;
+}
+
+.crisis-banner {
+  background: var(--alert-red-soft);
+  border-left: 3px solid var(--alert-red);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.85rem;
+  margin-top: 16px;
+  display: none;
+}
+
+.crisis-banner.show {
+  display: block;
+}
+
+/* ==========================================================================
+   HASIL / DASHBOARD
+   ========================================================================== */
+
+.result-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.result-header .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.score-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.score-card {
+  background: var(--white);
+  border: 1px solid var(--paper-line);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+}
+
+.score-card .score-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.score-card .score-value {
+  font-family: var(--font-mono);
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.score-card .score-category {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.category-rendah { background: var(--calm-green-soft); color: var(--calm-green); }
+.category-sedang { background: var(--alert-amber-soft); color: var(--alert-amber); }
+.category-tinggi { background: var(--alert-red-soft); color: var(--alert-red); }
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--paper-line);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.chart-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.insight-card {
+  background: var(--white);
+  border: 1px solid var(--paper-line);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.insight-card h3 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--data-blue);
+  margin-bottom: 10px;
+}
+
+.insight-card p {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 48px;
+}
+
+/* ==========================================================================
+   LOADING / API STATUS
+   ========================================================================== */
+
+.loading-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.api-config-banner {
+  background: var(--alert-amber-soft);
+  border-left: 3px solid var(--alert-amber);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.85rem;
+  margin-bottom: 24px;
+  display: none;
+}
+
+.api-config-banner.show {
+  display: block;
+}
+
+.api-config-banner code {
+  background: rgba(0,0,0,0.06);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.site-footer {
+  text-align: center;
+  padding: 32px 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--paper-line);
+  margin-top: 40px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .hero h1 {
+    max-width: 100%;
+  }
+
+  .method-strip {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .score-display {
+    grid-template-columns: 1fr;
+  }
+
+  .action-row {
+    flex-direction: column;
+  }
+
+  .chat-window {
+    height: 420px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+}

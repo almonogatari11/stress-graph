@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stressgraph — Chat AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      color-scheme: light;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f2f8ff] text-[#072147]">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#0b66d1] font-semibold">AI SUPPORT CHAT</p>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Sesi Curhat dengan AI Stressgraph</h1>
+        <p class="text-sm text-[#4b5563] mt-1">Halaman khusus untuk berbagi perasaan, beban akademik, atau kebutuhan dukungan.</p>
+      </div>
+      <button onclick="goBackToResults()" class="inline-flex items-center justify-center rounded-lg border border-[#d0e2fb] bg-white px-4 py-2 text-sm font-semibold text-[#072147] hover:bg-[#eef6ff] transition-all">
+        <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke hasil
+      </button>
+    </div>
+
+    <div class="rounded-2xl border border-[#eef6ff] bg-white shadow-sm overflow-hidden">
+    <div class="bg-[#0b66d1] text-white p:5 sm:p-6">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e8f3ff]">SUPPORTIVE WELLBEING AGENT</div>
+            <h2 class="text-lg font-semibold mt-1">Halo, saya siap mendengarkan</h2>
+          </div>
+          <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
+        </div>
+      </div>
+
+      <div class="h-[460px] sm:h-[560px] flex flex-col bg-[#f2f8ff]">
+        <div id="chat-messages" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4"></div>
+
+        <div id="chat-typing" class="hidden px-6 py-2 flex items-center gap-1 bg-white border-t border-[#eef6ff]">
+          <div class="w-1.5 h-1.5 bg-[#0b66d1] rounded-full animate-bounce"></div>
+          <div class="w-1.5 h-1.5 bg-[#0b66d1] rounded-full animate-bounce [animation-delay:0.2s]"></div>
+          <div class="w-1.5 h-1.5 bg-[#0b66d1] rounded-full animate-bounce [animation-delay:0.4s]"></div>
+          <span class="text-[11px] text-[#4b5563] font-mono ml-2">AI sedang menyiapkan balasan...</span>
+        </div>
+
+        <div class="p-4 border-t border-[#eef6ff] bg-white flex flex-col sm:flex-row gap-3">
+          <input id="chat-input" type="text" placeholder="Ceritakan apa yang sedang kamu rasakan..." class="flex-1 h-11 rounded-lg border border-[#d0e2fb] bg-[#f2f8ff] px-4 text-sm outline-none focus:border-[#0b66d1]" onkeydown="if(event.key==='Enter') sendChatMessage()" />
+          <button id="btn-send-chat" onclick="sendChatMessage()" class="bg-[#0b66d1] hover:bg-[#084e9a] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all">Kirim</button>
+        </div>
+      </div>
+
+      <div id="crisis-banner" class="hidden border-t border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <strong>Jika situasinya terasa berat, jangan dipaksa sendirian.</strong> Hubungi layanan dukungan atau tenaga profesional segera.
+      </div>
+
+      <!-- Crisis modal overlay -->
+      <div id="crisis-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative max-w-lg w-full mx-4 bg-white rounded-2xl shadow-lg p-6 border">
+          <h3 class="text-lg font-semibold text-red-700">Peringatan: Terdeteksi kata-kata krisis</h3>
+          <p class="text-sm text-gray-700 mt-2">Kami menemukan kata-kata yang mengindikasikan kamu mungkin sedang dalam situasi yang berat atau berisiko. Jika kamu merasa membahayakan diri sendiri, segera hubungi layanan darurat atau tenaga profesional.</p>
+          <ul class="mt-3 text-sm text-gray-700 list-disc list-inside">
+            <li><strong>Layanan Darurat (Indonesia):</strong> Telepon 119 ext 8</li>
+            <li><strong>Dukungan Kampus:</strong> Hubungi layanan konseling kampus atau konselor fakultas</li>
+          </ul>
+
+          <div class="mt-4 flex gap-2">
+            <a id="btn-resources" target="_blank" rel="noreferrer" href="https://www.sejiwa.id" class="flex-1 inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm">Saran & Konsultasi</a>
+            <button id="btn-continue-chat" class="inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm">Lanjutkan Chat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./config.js"></script>
+  <script>
+    const CRISIS_HOTWORDS = ['bunuh diri', 'mengakhiri hidup', 'menyakiti diri', 'self harm', 'ingin mati', 'tidak ingin hidup', 'mengakhiri semuanya'];
+
+    const params = new URLSearchParams(window.location.search);
+    const state = {
+      assessmentId: params.get('assessment_id') || '',
+      nama: params.get('nama') || '',
+      jurusan: params.get('jurusan') || '',
+      pssScore: params.get('pss_score') || '',
+      pssCategory: params.get('pss_category') || '',
+      mlConfidence: params.get('ml_confidence') || '',
+      mlCategory: params.get('ml_category') || ''
+    };
+
+    async function apiCall(path, options = {}) {
+      try {
+        const res = await fetch(`${API_BASE_URL}${path}`, {
+          headers: { 'Content-Type': 'application/json' },
+          ...options,
+        });
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({}));
+          throw new Error(errBody.detail || `Request gagal (${res.status})`);
+        }
+        return await res.json();
+      } catch (err) {
+        console.error('API error:', err);
+        throw err;
+      }
+    }
+
+    function appendChatBubble(role, text) {
+      const box = document.getElementById('chat-messages');
+      const bubble = document.createElement('div');
+      if (role === 'user') {
+        bubble.className = 'flex justify-end';
+        bubble.innerHTML = `<div class="max-w-[80%] rounded-2xl rounded-tr-sm bg-[#0b66d1] text-white px-4 py-3 text-sm leading-relaxed">${text}</div>`;
+      } else {
+        bubble.className = 'flex justify-start';
+        bubble.innerHTML = `<div class="max-w-[80%] rounded-2xl rounded-tl-sm border border-[#eef6ff] bg-white px-4 py-3 text-sm leading-relaxed text-[#072147] whitespace-pre-wrap">${text}</div>`;
+      }
+      box.appendChild(bubble);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function goBackToResults() {
+      const params = new URLSearchParams({
+        view: 'hasil',
+        assessment_id: state.assessmentId,
+        nama: state.nama,
+        jurusan: state.jurusan,
+        pss_score: state.pssScore,
+        pss_category: state.pssCategory,
+        ml_confidence: state.mlConfidence,
+        ml_category: state.mlCategory,
+      });
+      window.location.href = `index.html?${params.toString()}`;
+    }
+
+    function greetUser() {
+      const pssScore = state.pssScore || '-';
+      const pssCategory = state.pssCategory || 'belum lengkap';
+      const mlConfidence = state.mlConfidence || '-';
+      const mlCategory = state.mlCategory || 'belum lengkap';
+
+      let pssNarrative = 'menunjukkan kondisi yang cukup stabil';
+      if (pssCategory === 'Tinggi') {
+        pssNarrative = 'menunjukkan beban stres yang cukup berat sehingga kamu mungkin merasa lebih lelah atau tertekan';
+      } else if (pssCategory === 'Sedang') {
+        pssNarrative = 'menunjukkan adanya tekanan yang cukup terasa, namun masih bisa ditangani dengan dukungan dan strategi yang tepat';
+      }
+
+      let mlNarrative = 'tidak ada sinyal kekhawatiran yang terlalu kuat';
+      if (mlCategory === 'Tinggi') {
+        mlNarrative = 'memberi sinyal bahwa faktor akademik, tidur, atau dukungan sosial sedang memberi beban yang cukup besar';
+      } else if (mlCategory === 'Sedang') {
+        mlNarrative = 'menunjukkan ada beberapa faktor yang patut diperhatikan agar tetap seimbang';
+      }
+
+      const intro = state.nama
+        ? `Halo ${state.nama}${state.jurusan ? ` dari ${state.jurusan}` : ''}, saya melihat hasil penilaianmu hari ini: skor PSS-10 ${pssScore}/40 masuk kategori ${pssCategory}, yang ${pssNarrative}, sementara prediksi ML menunjukkan ${mlConfidence}% dengan kategori ${mlCategory}, ${mlNarrative}. Kamu sudah melangkah cukup berani untuk datang ke sini, jadi silakan ceritakan apa yang sedang kamu rasakan, saya akan mendengarkan dengan sabar dan membantu lebih personal.`
+        : `Halo, saya melihat hasil penilaianmu hari ini: skor PSS-10 ${pssScore}/40 masuk kategori ${pssCategory}, yang ${pssNarrative}, sementara prediksi ML menunjukkan ${mlConfidence}% dengan kategori ${mlCategory}, ${mlNarrative}. Kamu tidak sendirian, jadi silakan ceritakan apa yang sedang kamu rasakan, saya akan mendengarkan dengan sabar dan membantu lebih personal.`;
+      appendChatBubble('assistant', intro);
+    }
+
+    function showTypingIndicator() {
+      document.getElementById('chat-typing').classList.remove('hidden');
+    }
+
+    function hideTypingIndicator() {
+      document.getElementById('chat-typing').classList.add('hidden');
+    }
+
+    function showCrisisModal() {
+      const modal = document.getElementById('crisis-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      // wire buttons
+      const btnClose = document.getElementById('btn-continue-chat');
+      const btnResources = document.getElementById('btn-resources');
+      if (btnClose) btnClose.onclick = () => modal.classList.add('hidden');
+      if (btnResources) btnResources.onclick = () => modal.classList.add('hidden');
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendChatBubble('user', message);
+      input.value = '';
+
+      const lower = message.toLowerCase();
+      if (CRISIS_HOTWORDS.some(word => lower.includes(word))) {
+        document.getElementById('crisis-banner').classList.remove('hidden');
+        showCrisisModal();
+      }
+
+      const sendBtn = document.getElementById('btn-send-chat');
+      sendBtn.disabled = true;
+      input.disabled = true;
+      showTypingIndicator();
+
+      try {
+        const result = await apiCall('/api/chat/message', {
+          method: 'POST',
+          body: JSON.stringify({
+            assessment_id: state.assessmentId,
+            message,
+          }),
+        });
+        hideTypingIndicator();
+        appendChatBubble('assistant', result.reply);
+      } catch (err) {
+        hideTypingIndicator();
+        appendChatBubble('assistant', 'Maaf, koneksi chat sedang bermasalah. Coba lagi sebentar ya.');
+      } finally {
+        sendBtn.disabled = false;
+        input.disabled = false;
+        input.focus();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      greetUser();
+    });
+  </script>
+</body>
+</html>

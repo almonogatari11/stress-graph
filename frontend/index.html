@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stressgraph — Premium UI/UX Design System Specification</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono as per DESIGN-expo.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            expo: {
+              primary: '#0b66d1',
+              primaryActive: '#084e9a',
+              textLink: '#0b66d1',
+              ink: '#072147',
+              body: '#4b5563',
+              hairline: '#e6eef9',
+              hairlineStrong: '#d0e2fb',
+              canvas: '#ffffff',
+              canvasSoft: '#f2f8ff',
+              surfaceCard: '#ffffff',
+              surfaceStrong: '#eef6ff',
+              surfaceDark: '#072147',
+              skyLight: '#e8f3ff',
+              skyMid: '#cfe6fd',
+              success: '#16a34a',
+              warning: '#ffb703',
+              error: '#eb8e90',
+            }
+          },
+          boxShadow: {
+            soft: '0 4px 12px rgba(0, 0, 0, 0.04)',
+            device: '0 20px 50px rgba(0, 0, 0, 0.12)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar for premium dev feel */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f2f8ff;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d0e2fb;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0b66d1;
+    }
+
+    /* Animated pulse line styling */
+    .pulse-path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawPulse 4s linear infinite;
+    }
+    @keyframes drawPulse {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .auth-toast {
+      border-radius: 1rem;
+      border: 1px solid transparent;
+      padding: 1rem 1rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      background: rgba(11, 102, 209, 0.08);
+      color: #0f172a;
+      box-shadow: 0 18px 40px rgba(11, 102, 209, 0.08);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      animation: fadeInUp 0.25s ease both;
+    }
+    .auth-toast.hidden {
+      display: none;
+    }
+    .auth-toast.success {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.22);
+      color: #064e3b;
+    }
+    .auth-toast.error {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.22);
+      color: #7f1d1d;
+    }
+    .auth-toast.info {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.22);
+      color: #1d4ed8;
+    }
+    .auth-toast .toast-icon {
+      width: 2rem;
+      height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+    }
+
+    /* Page transition animation for smooth view swapping */
+    main {
+      position: relative;
+    }
+    main > section {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      filter: blur(2px);
+      transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1), transform 320ms cubic-bezier(0.22, 1, 0.36, 1), filter 320ms ease;
+      will-change: opacity, transform, filter;
+    }
+    main > section:not(.hidden) {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+    main > section.page-leaving {
+      opacity: 0;
+      transform: translateY(-18px) scale(0.98);
+      filter: blur(2px);
+    }
+    main > section.page-entering {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      filter: blur(2px);
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .ai-chat-bubble {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 60;
+      width: 3.1rem;
+      height: 3.1rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #0b66d1, #084e9a);
+      display: grid;
+      place-items: center;
+      color: white;
+      box-shadow: 0 20px 50px rgba(11, 102, 209, 0.18);
+      transition: transform 180ms ease, opacity 180ms ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .ai-chat-bubble.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .ai-chat-bubble:hover {
+      transform: translateY(-2px);
+    }
+    .ai-chat-bubble .bubble-label {
+      position: absolute;
+      right: 4rem;
+      bottom: 0;
+      transform: translateY(50%);
+      background: #0b66d1;
+      color: white;
+      border-radius: 9999px;
+      padding: 0.55rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 12px 24px rgba(11, 102, 209, 0.16);
+      opacity: 0;
+      transition: opacity 180ms ease;
+      pointer-events: none;
+    }
+    .ai-chat-bubble:hover .bubble-label {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="bg-expo-canvas text-expo-ink font-sans min-h-screen selection:bg-expo-skyLight selection:text-expo-ink">
+
+  <!-- Header / Navigation -->
+  <nav class="sticky top-0 z-50 bg-expo-canvas/90 backdrop-blur-md border-b border-expo-hairline h-16 flex items-center justify-between px-6 lg:px-12">
+    <div class="flex items-center gap-3">
+      <div class="text-xl font-bold tracking-tight text-expo-ink flex items-center gap-2">
+        <i class="fa-solid fa-wave-square text-expo-primary"></i>
+        <span>stress<span class="text-expo-textLink font-mono text-[17px]">.graph</span></span>
+      </div>
+      <span class="hidden sm:inline-block h-4 w-px bg-expo-hairlineStrong"></span>
+      <span class="hidden sm:inline-block font-mono text-[11px] tracking-widest text-expo-body uppercase">STUDENT WELLBEING SYSTEM</span>
+    </div>
+    
+    <!-- Flow progress steps indicators -->
+    <div class="hidden md:flex items-center gap-6 text-xs font-medium text-expo-body">
+      <span id="nav-step-1" class="text-expo-ink font-semibold flex items-center gap-1.5"><i class="fa-solid fa-circle-dot text-[10px] text-expo-textLink"></i> 1. Pengantar</span>
+      <i class="fa-solid fa-chevron-right text-[10px] text-expo-hairlineStrong"></i>
+      <span id="nav-step-2" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 2. Kuesioner PSS-10</span>
+      <i class="fa-solid fa-chevron-right text-[10px] text-expo-hairlineStrong"></i>
+      <span id="nav-step-3" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 3. Faktor Ekologi (ML)</span>
+      <i class="fa-solid fa-chevron-right text-[10px] text-expo-hairlineStrong"></i>
+      <span id="nav-step-4" class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-[8px] text-expo-hairlineStrong"></i> 4. Analisis & Konseling</span>
+    </div>
+
+  </nav>
+
+  <!-- Main View Frame -->
+  <main class="relative">
+
+    <!-- VIEW 1: LANDING & PREMIUM HERO -->
+    <section id="view-landing" class="block transition-all duration-300">
+      <!-- Sky-blue wash behind hero -->
+      <div class="absolute inset-x-0 top-0 h-[650px] bg-gradient-to-b from-[#e8f3ff]/40 to-transparent pointer-events-none z-0"></div>
+      
+      <div class="max-w-[1200px] mx-auto px-6 pt-16 pb-24 relative z-10">
+        <div class="text-center max-w-[850px] mx-auto">
+          <!-- Premium badge -->
+          <div class="inline-flex items-center gap-2 bg-white/80 border border-expo-hairlineStrong rounded-full px-3.5 py-1.5 text-xs font-semibold text-expo-ink shadow-sm mb-6">
+            <span class="w-2 h-2 rounded-full bg-expo-success animate-pulse"></span>
+            <span>Sistem Terverifikasi Klinis · Akurasi Model ML 88.64%</span>
+          </div>
+          
+          <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-expo-ink leading-[1.05] mb-6">
+            Mengukur tingkat stress mahasiswa dengan <span class="italic text-expo-textLink">presisi ilmiah</span>.
+          </h1>
+          <p class="text-lg text-expo-body font-normal leading-relaxed max-w-[680px] mx-auto mb-10">
+            Menggabungkan metodologi psikologi terstandar <strong class="text-expo-ink">PSS-10</strong> dengan model klasifikasi <strong class="text-expo-ink">Random Forest</strong> untuk mendeteksi kontributor stres secara akurat.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <button onclick="startAnalysisFlow()" class="bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-all duration-200 shadow-lg w-full sm:w-auto">
+              Mulai Analisis Mandiri <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+            </button>
+            <a href="#about-section" class="text-expo-textLink hover:underline text-sm font-semibold flex items-center gap-1.5 py-2">
+              Pelajari Metodologi Riset <i class="fa-solid fa-circle-info text-xs"></i>
+            </a>
+          </div>
+
+          <div class="mx-auto mb-10 max-w-[780px] rounded-2xl border border-expo-hairlineStrong bg-white/90 p-5 shadow-soft backdrop-blur">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+              <div class="flex-1">
+                <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-expo-textLink font-semibold">AKSES PERSONAL</div>
+                <h3 class="mt-2 text-lg font-semibold text-expo-ink">Masuk untuk menyimpan hasil dan riwayat tes</h3>
+                <p class="mt-2 text-sm text-expo-body">Atau lanjut sebagai tamu jika ingin mencoba dulu tanpa daftar.</p>
+              </div>
+              <div class="w-full lg:w-[340px]">
+                <div id="auth-loggedin-state" class="hidden rounded-xl border border-expo-hairline bg-expo-canvasSoft p-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <div id="auth-user-name" class="font-semibold text-expo-ink"></div>
+                      <div id="auth-user-role" class="text-xs text-expo-body font-mono uppercase tracking-wider"></div>
+                    </div>
+                    <button onclick="logoutUser()" class="text-sm font-semibold text-expo-textLink">Keluar</button>
+                  </div>
+                </div>
+                <div id="auth-form-state" class="space-y-3">
+                  <input id="auth-email" type="email" placeholder="Email kamu" class="w-full rounded-lg border border-expo-hairlineStrong bg-expo-canvasSoft px-3.5 py-2.5 text-sm outline-none focus:border-expo-ink" />
+                  <input id="auth-password" type="password" placeholder="Kata sandi" class="w-full rounded-lg border border-expo-hairlineStrong bg-expo-canvasSoft px-3.5 py-2.5 text-sm outline-none focus:border-expo-ink" />
+                  <div id="auth-toast" class="auth-toast hidden" aria-live="polite"></div>
+                  <div class="flex flex-col gap-2 sm:flex-row">
+                    <button onclick="loginUser()" class="flex-1 rounded-lg bg-expo-primary px-3.5 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-expo-primaryActive">Masuk</button>
+                    <button onclick="registerUser()" class="flex-1 rounded-lg border border-expo-hairlineStrong bg-white px-3.5 py-2.5 text-sm font-semibold text-expo-ink transition-all duration-150 hover:bg-expo-canvasSoft">Daftar</button>
+                    <button onclick="continueAsGuest()" class="flex-1 rounded-lg border border-expo-hairlineStrong bg-white px-3.5 py-2.5 text-sm font-semibold text-expo-ink transition-all duration-150 hover:bg-expo-canvasSoft">Tamu</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Animated pulse pattern representation -->
+        <div class="w-full max-w-[800px] mx-auto mb-20">
+          <svg class="w-full h-16 overflow-visible" viewBox="0 0 760 36">
+            <path class="pulse-path" fill="none" stroke="#0b66d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M0,18 L120,18 L135,4 L150,32 L165,18 L260,18 L275,10 L290,26 L305,18 L400,18 L415,2 L430,34 L445,18 L540,18 L555,10 L570,26 L585,18 L680,18 L695,4 L710,32 L725,18 L760,18" />
+          </svg>
+        </div>
+
+        <!-- Device-mockup composite as premium page chrome -->
+        <div class="max-w-[1000px] mx-auto border border-expo-hairlineStrong bg-white rounded-2xl shadow-device overflow-hidden relative group">
+          <div class="bg-expo-surfaceStrong border-b border-expo-hairlineStrong px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-400"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+              <span class="w-3 h-3 rounded-full bg-green-400"></span>
+            </div>
+            <div class="font-mono text-[11px] text-expo-body">stressgraph_clinical_engine_v1.0</div>
+            <div class="w-12"></div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-expo-hairlineStrong">
+            <div class="p-6 md:col-span-2 space-y-6">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-xs text-expo-body font-semibold">DASHBOARD SIMULASI HASIL</span>
+                <span class="bg-expo-success/10 text-expo-success text-[10px] font-semibold px-2 py-0.5 rounded">ONLINE</span>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="border border-expo-hairline p-4 rounded-xl bg-expo-canvasSoft">
+                  <div class="font-mono text-[10px] text-expo-body mb-1">SKOR PENAPISAN PSS-10</div>
+                  <div class="text-3xl font-bold font-mono text-expo-ink">28<span class="text-lg text-expo-body font-normal">/40</span></div>
+                  <div class="text-xs text-[#ab6400] font-semibold mt-1">Stres Sedang - Tinggi</div>
+                </div>
+                <div class="border border-expo-hairline p-4 rounded-xl bg-expo-canvasSoft">
+                  <div class="font-mono text-[10px] text-expo-body mb-1">PROBABILITAS RF (ML)</div>
+                  <div class="text-3xl font-bold font-mono text-expo-ink">88.6%</div>
+                  <div class="text-xs text-red-500 font-semibold mt-1">Sinyal Distress Tinggi</div>
+                </div>
+              </div>
+              <div class="border border-expo-hairline p-4 rounded-xl bg-expo-canvasSoft">
+                <div class="font-mono text-[10px] text-expo-body mb-2">INTEGRASI KORELASI INDIKATOR LINGKUNGAN</div>
+                <div class="h-32 flex items-end gap-3 pt-4 border-b border-expo-hairlineStrong">
+                  <div class="w-full bg-[#eb8e90] h-4/5 rounded-t" title="Study Load"></div>
+                  <div class="w-full bg-[#eb8e90] h-5/6 rounded-t" title="Sleep Quality"></div>
+                  <div class="w-full bg-[#16a34a] h-1/4 rounded-t" title="Social Support"></div>
+                  <div class="w-full bg-[#eb8e90] h-2/3 rounded-t" title="Anxiety Level"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[9px] text-expo-body mt-2">
+                  <span>Beban Studi</span>
+                  <span>Kual. Tidur</span>
+                  <span>Dukungan Sos</span>
+                  <span>Kecemasan</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 bg-expo-surfaceDark text-white space-y-4">
+              <span class="font-mono text-xs text-expo-on-dark-soft block font-semibold">PREDICTIVE PAYLOAD (JSON)</span>
+              <pre class="font-mono text-[11px] leading-relaxed text-blue-200 overflow-x-auto bg-expo-surfaceDarkElevated p-4 rounded-lg">
+{
+  "anxiety_level": 14,
+  "sleep_quality": 2,
+  "study_load": 4,
+  "peer_pressure": 4,
+  "social_support": 1,
+  "bullying_history": 0,
+  "output": {
+    "stress_level": "High",
+    "rf_confidence": 0.8864
+  }
+}</pre>
+              <div class="text-[11px] text-expo-on-dark-soft leading-normal">
+                <i class="fa-solid fa-circle-info text-blue-300 mr-1"></i> Data mentah di atas adalah representasi parameter pendukung performa model klasifikasi Random Forest.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Method Strip Section -->
+        <div id="about-section" class="mt-24 border-t border-expo-hairlineStrong pt-16">
+          <div class="text-center max-w-[600px] mx-auto mb-12">
+            <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-bold">ALUR DIAGNOSTIK</span>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-expo-ink mt-2">Arsitektur Pengukuran Berlapis</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300">
+              <div class="w-8 h-8 rounded-lg bg-expo-surfaceStrong flex items-center justify-center font-mono text-xs font-bold text-expo-ink mb-4">01</div>
+              <h3 class="text-md font-bold text-expo-ink mb-2">Kuesioner Klinis PSS-10</h3>
+              <p class="text-sm text-expo-body leading-relaxed">
+                Menilai persepsi kendali diri dan tekanan psikologis subjektif selama 30 hari terakhir dengan standar psikologi medis Cohen.
+              </p>
+            </div>
+            <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300">
+              <div class="w-8 h-8 rounded-lg bg-expo-surfaceStrong flex items-center justify-center font-mono text-xs font-bold text-expo-ink mb-4">02</div>
+              <h3 class="text-md font-bold text-expo-ink mb-2">Prediksi Random Forest</h3>
+              <p class="text-sm text-expo-body leading-relaxed">
+                Logika klasifikasi multi-pohon keputusan (Decision Trees) memproses 20 variabel biologis, akademis, dan faktor lingkungan.
+              </p>
+            </div>
+            <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300">
+              <div class="w-8 h-8 rounded-lg bg-expo-surfaceStrong flex items-center justify-center font-mono text-xs font-bold text-expo-ink mb-4">03</div>
+              <h3 class="text-md font-bold text-expo-ink mb-2">Intervensi & Dukungan AI</h3>
+              <p class="text-sm text-expo-body leading-relaxed">
+                Ruang berbagi cerita interaktif dengan model bahasa besar untuk mitigasi tingkat pertama secara suportif dan aman.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disclaimer panel -->
+        <div class="mt-12 bg-expo-surfaceStrong border border-expo-hairlineStrong p-6 rounded-xl text-xs text-expo-body flex flex-col md:flex-row items-start md:items-center gap-4">
+          <span class="bg-expo-primary text-white font-mono font-bold text-[10px] px-2.5 py-1 rounded-md tracking-wider">BATASAN MEDIS</span>
+          <p class="leading-relaxed">
+            Stressgraph merupakan instrumen skrining dini ilmiah yang bersifat informatif, bukan diagnosis klinis. Hasil instrumen tidak menggantikan kewenangan evaluasi medis dari psikolog atau psikiater berlisensi.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: KUESIONER STEP (Identitas & Quiz) -->
+    <section id="view-kuesioner" class="hidden max-w-[700px] mx-auto px-6 py-16 transition-all duration-300">
+      
+      <!-- STEP 2A: Identitas Entry Form -->
+      <div id="identitas-step" class="space-y-8">
+        <div>
+          <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-semibold block mb-2">LANGKAH PERTAMA</span>
+          <h2 class="text-3xl font-bold tracking-tight text-expo-ink">Personalisasi Sesi Anda</h2>
+          <p class="text-sm text-expo-body mt-2">Nama dan jurusan bersifat opsional. Data ini digunakan untuk memberikan analisis personal dalam laporan akhir Anda.</p>
+        </div>
+
+        <div class="border border-expo-hairline bg-white p-8 rounded-xl shadow-soft space-y-6">
+          <div class="space-y-2">
+            <label for="input-nama" class="block text-xs font-semibold text-expo-ink uppercase tracking-wider">NAMA ANDA (OPSIONAL)</label>
+            <input type="text" id="input-nama" placeholder="Contoh: Alyas" class="w-full h-11 border border-expo-hairlineStrong focus:border-expo-ink focus:border-2 focus:ring-0 rounded-lg px-4 text-sm bg-expo-canvasSoft transition-all duration-150 outline-none" />
+          </div>
+          <div class="space-y-2">
+            <label for="input-jurusan" class="block text-xs font-semibold text-expo-ink uppercase tracking-wider">JURUSAN / PROGRAM STUDI (OPSIONAL)</label>
+            <input type="text" id="input-jurusan" placeholder="Contoh: Psikologi Klinis" class="w-full h-11 border border-expo-hairlineStrong focus:border-expo-ink focus:border-2 focus:ring-0 rounded-lg px-4 text-sm bg-expo-canvasSoft transition-all duration-150 outline-none" />
+          </div>
+
+          <button onclick="startQuestionnaire()" class="w-full h-11 bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold rounded-lg transition-all duration-150 flex items-center justify-center gap-2">
+            Lanjutkan ke PSS-10 <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2B: PSS-10 Interactive Slider/Cards -->
+      <div id="quiz-step" class="hidden space-y-8">
+        <!-- Progress bar tracking -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-baseline font-mono text-[11px] text-expo-body font-bold">
+            <span id="question-number">PERTANYAAN 01 / 10</span>
+            <span class="tracking-widest uppercase text-expo-textLink">RIWAYAT 30 HARI TERAKHIR</span>
+          </div>
+          <div class="h-1.5 w-full bg-expo-hairline rounded-full overflow-hidden">
+            <div id="progress-fill" class="h-full bg-expo-textLink transition-all duration-300" style="width: 10%"></div>
+          </div>
+        </div>
+
+        <div class="border border-expo-hairline bg-white p-8 rounded-xl shadow-soft space-y-8">
+          <div class="space-y-2">
+            <h3 id="question-text" class="text-xl md:text-2xl font-bold tracking-tight text-expo-ink leading-relaxed">
+              Memuat pertanyaan instrumen...
+            </h3>
+          </div>
+
+          <!-- Likert Option Containers -->
+          <div id="likert-options" class="flex flex-col gap-3">
+            <!-- Dynamically populated from JS -->
+          </div>
+
+          <div class="flex items-center justify-between pt-4 border-t border-expo-hairline">
+            <button id="btn-prev" onclick="prevQuestion()" class="border border-expo-hairlineStrong hover:bg-expo-canvasSoft text-expo-ink font-semibold px-4 py-2.5 rounded-lg text-sm transition-all duration-200">
+              <i class="fa-solid fa-chevron-left mr-1.5"></i> Sebelumnya
+            </button>
+            <button id="btn-next" onclick="nextQuestion()" disabled class="bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold px-5 py-2.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
+              Berikutnya <i class="fa-solid fa-chevron-right ml-1.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: ML FEATURE INPUTS -->
+    <section id="view-ml" class="hidden max-w-[900px] mx-auto px-6 py-16 transition-all duration-300">
+      <div class="mb-8">
+        <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-semibold block mb-2">PARAMETER MACHINE LEARNING</span>
+        <h2 class="text-3xl font-bold tracking-tight text-expo-ink">Faktor Ekologi & Keseharian</h2>
+        <p class="text-sm text-expo-body mt-2">Model klasifikasi Random Forest memproses 20 variabel biologis, akademis, dan sosial untuk menghasilkan prediksi yang presisi.</p>
+      </div>
+
+      <!-- Category Tabs for 20 Features -->
+      <div class="flex border-b border-expo-hairlineStrong mb-8 gap-1 overflow-x-auto">
+        <button onclick="switchMLTab('Mental & Fisik')" id="tab-btn-Mental & Fisik" class="px-5 py-3 text-xs font-semibold tracking-wider uppercase border-b-2 border-expo-primary text-expo-ink whitespace-nowrap transition-all duration-150">
+          <i class="fa-solid fa-heart-pulse mr-1.5"></i> Fisik & Mental (8)
+        </button>
+        <button onclick="switchMLTab('Akademik & Karir')" id="tab-btn-Akademik & Karir" class="px-5 py-3 text-xs font-semibold tracking-wider uppercase border-b-2 border-transparent text-expo-body hover:text-expo-ink whitespace-nowrap transition-all duration-150">
+          <i class="fa-solid fa-graduation-cap mr-1.5"></i> Akademik & Karir (6)
+        </button>
+        <button onclick="switchMLTab('Lingkungan & Sosial')" id="tab-btn-Lingkungan & Sosial" class="px-5 py-3 text-xs font-semibold tracking-wider uppercase border-b-2 border-transparent text-expo-body hover:text-expo-ink whitespace-nowrap transition-all duration-150">
+          <i class="fa-solid fa-people-roof mr-1.5"></i> Sosial & Lingkungan (6)
+        </button>
+      </div>
+
+      <!-- Form Grid Container -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="ml-form-fields">
+        <!-- Generates Dynamic sliders from JS based on active tab -->
+      </div>
+
+      <!-- Navigation inside ML step -->
+      <div class="mt-12 border-t border-expo-hairlineStrong pt-8 flex items-center justify-between">
+        <button onclick="goToView('kuesioner')" class="border border-expo-hairlineStrong hover:bg-expo-canvasSoft text-expo-ink font-semibold px-4 py-2.5 rounded-lg text-sm transition-all duration-200">
+          <i class="fa-solid fa-chevron-left mr-1.5"></i> Kembali ke PSS-10
+        </button>
+        <button id="btn-submit-ml" onclick="submitMLFeatures()" class="h-12 bg-expo-primary hover:bg-expo-primaryActive text-white text-sm font-semibold px-8 rounded-lg shadow-lg transition-all duration-150 flex items-center justify-center gap-2">
+          Hasilkan Laporan Analisis Akhir <i class="fa-solid fa-circle-nodes"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW 4: RESULTS DASHBOARD -->
+    <section id="view-hasil" class="hidden max-w-[1000px] mx-auto px-6 py-16 transition-all duration-300">
+      
+      <div class="border-b border-expo-hairlineStrong pb-8 mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-semibold block mb-2">WELLBEING REPORT & DIAGNOSTIC ANALYTICS</span>
+          <h2 class="text-3xl font-bold tracking-tight text-expo-ink">Laporan Hasil Pengukuran</h2>
+          <p id="result-nama-display" class="text-sm text-expo-body mt-1">Laporan komprehensif tingkat stres subjek.</p>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <div class="relative">
+            <button id="result-menu-button" onclick="toggleResultMenu()" class="inline-flex items-center justify-center rounded-full border border-expo-hairlineStrong bg-white p-3 shadow-sm hover:bg-expo-canvasSoft transition-all duration-150" aria-expanded="false" aria-controls="result-menu-panel">
+              <span class="sr-only">Buka menu hasil</span>
+              <div class="space-y-1">
+                <span class="block h-0.5 w-5 bg-expo-ink"></span>
+                <span class="block h-0.5 w-5 bg-expo-ink"></span>
+                <span class="block h-0.5 w-5 bg-expo-ink"></span>
+              </div>
+            </button>
+            <div id="result-menu-panel" class="hidden absolute right-0 mt-3 w-48 overflow-hidden rounded-2xl border border-expo-hairline bg-white shadow-soft ring-1 ring-black/5">
+              <button onclick="restartTest(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-ink hover:bg-expo-canvasSoft transition-all duration-150">Mulai ulang tes</button>
+              <button onclick="openChatPage(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-ink hover:bg-expo-canvasSoft transition-all duration-150">Chatbot</button>
+              <button onclick="logoutUser(); closeResultMenu()" class="w-full text-left px-4 py-3 text-sm text-expo-error hover:bg-expo-canvasSoft transition-all duration-150">Logout</button>
+            </div>
+          </div>
+          <button onclick="window.print()" class="border border-expo-hairlineStrong hover:bg-expo-canvasSoft text-expo-ink font-semibold px-4 py-2 rounded-lg text-xs tracking-wide uppercase transition-all duration-150">
+            <i class="fa-solid fa-print mr-1.5"></i> Cetak Hasil
+          </button>
+        </div>
+      </div>
+
+      <!-- Primary Scores Display Side-by-Side -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- PSS-10 Diagnostic Card -->
+        <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300 space-y-4">
+          <div class="flex items-center justify-between font-mono text-[11px] text-expo-body font-bold uppercase tracking-wider">
+            <span>Instrumen PSS-10</span>
+            <span class="bg-expo-surfaceStrong px-2.5 py-1 rounded-full text-expo-ink text-[9px]">Subjektif</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="result-pss-score" class="text-5xl font-bold font-mono tracking-tight text-expo-ink">—</span>
+            <span class="text-expo-body font-normal text-sm">skor total</span>
+          </div>
+          <div>
+            <span id="result-pss-category" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
+              Memproses...
+            </span>
+          </div>
+          <p class="text-xs text-expo-body leading-relaxed">
+            Skor dihitung berdasarkan skala likert dari 10 pertanyaan persepsi. Kategori mencerminkan seberapa berat beban pikiran subjektif Anda dalam satu bulan terakhir.
+          </p>
+        </div>
+
+        <!-- Machine Learning Decision Card -->
+        <div class="border border-expo-hairline bg-white p-6 rounded-xl hover:shadow-soft transition-all duration-300 space-y-4">
+          <div class="flex items-center justify-between font-mono text-[11px] text-expo-body font-bold uppercase tracking-wider">
+            <span>Prediksi Random Forest</span>
+            <span class="bg-expo-surfaceDark text-white px-2.5 py-1 rounded-full text-[9px]">Model ML AI</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="result-ml-confidence" class="text-5xl font-bold font-mono tracking-tight text-expo-ink">—</span>
+            <span class="text-expo-body font-normal text-sm">probabilitas model</span>
+          </div>
+          <div>
+            <span id="result-ml-category" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
+              Memproses...
+            </span>
+          </div>
+          <p class="text-xs text-expo-body leading-relaxed">
+            Probabilitas dihasilkan dari pohon keputusan Random Forest berdasarkan input 20 variabel bio-sosial-akademik pendukung Anda.
+          </p>
+        </div>
+      </div>
+
+      <!-- Graphical Analysis with Chart.js -->
+      <div class="border border-expo-hairline bg-white p-6 rounded-xl shadow-soft mb-8">
+        <h3 class="text-sm font-semibold text-expo-ink uppercase tracking-wider mb-6">Matriks Korelasi Komparatif</h3>
+        <div class="relative h-[250px] w-full">
+          <canvas id="resultChart"></canvas>
+          <div id="chart-fallback" class="hidden absolute inset-0 flex items-center justify-center bg-expo-canvasSoft text-xs text-expo-body">
+            Fungsi visualisasi grafik memerlukan koneksi modul Chart.js.
+          </div>
+        </div>
+      </div>
+
+      <!-- Insight Narrative Interpretation -->
+      <div class="border border-expo-hairline bg-white p-6 rounded-xl shadow-soft mb-8 space-y-3">
+        <h3 class="font-mono text-xs text-expo-textLink uppercase tracking-widest font-bold">INTEPRETASI HASIL DAN TINDAKAN</h3>
+        <p id="result-interpretation" class="text-sm text-expo-ink leading-relaxed">
+          Mengevaluasi hasil data penapisan subjektif dan prediksi klinis...
+        </p>
+      </div>
+
+      <!-- AI Chat Counselor Section → dedicated page -->
+      <div id="history-section" class="border border-expo-hairline bg-white rounded-xl shadow-soft overflow-hidden mb-8">
+        <div class="bg-expo-surfaceStrong p-6 border-b border-expo-hairline">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-expo-textLink font-semibold">RIWAYAT TES</div>
+              <h3 class="text-lg font-semibold text-expo-ink mt-1">Hasil sebelumnya yang tersimpan</h3>
+            </div>
+            <div id="history-count" class="rounded-full bg-expo-surfaceDark px-3 py-1 text-[11px] font-semibold text-white">0 item</div>
+          </div>
+        </div>
+        <div id="history-list" class="p-6 space-y-3"></div>
+      </div>
+
+      <div class="border border-expo-hairline bg-white rounded-xl shadow-soft overflow-hidden mb-12">
+        <div class="bg-expo-surfaceDark text-white p-6 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-[10px] text-expo-on-dark-soft tracking-wider">SUPPORTIVE WELLBEING AGENT</span>
+            <span class="w-2.5 h-2.5 bg-expo-success rounded-full animate-pulse"></span>
+          </div>
+          <h3 class="text-lg font-bold tracking-tight text-white">Halaman Chat AI yang Lebih Fokus</h3>
+          <p class="text-xs text-expo-on-dark-soft">Sesi curhat sekarang dipindah ke halaman khusus agar pengalaman chat lebih nyaman dan terarah.</p>
+        </div>
+
+        <div class="p-6 bg-expo-canvasSoft">
+          <div class="rounded-xl border border-expo-hairline bg-white p-6 space-y-4">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-expo-surfaceStrong flex items-center justify-center text-expo-textLink">
+                <i class="fa-solid fa-comments"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold text-expo-ink">Buka halaman chat bot tersendiri</h4>
+                <p class="text-sm text-expo-body mt-1">Kamu bisa bercerita lebih santai di halaman yang khusus didedikasikan untuk AI support.</p>
+              </div>
+            </div>
+            <button onclick="openChatPage()" class="w-full sm:w-auto bg-expo-primary hover:bg-expo-primaryActive text-white px-5 py-3 rounded-lg text-sm font-semibold transition-all duration-150">
+              <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> Buka Chat AI
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <button id="ai-chat-bubble" onclick="openChatPage()" class="ai-chat-bubble" type="button" aria-label="Buka chat AI">
+    <i class="fa-solid fa-comments"></i>
+    <span class="bubble-label">Chat AI</span>
+  </button>
+
+  <!-- Footer -->
+  <footer class="bg-expo-canvasSoft border-t border-expo-hairline py-16 px-6 lg:px-12">
+    <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between gap-8">
+      <div class="space-y-4 max-w-[320px]">
+        <div class="text-md font-bold tracking-tight text-expo-ink">
+          stress<span class="text-expo-textLink font-mono">.graph</span>
+        </div>
+        <p class="text-xs text-expo-body leading-relaxed">
+          Sebuah implementasi sistem terintegrasi pengukur kondisi kesejahteraan mental mahasiswa berbasis model prediktif kognitif-bioekologi.
+        </p>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-8">
+        <div class="space-y-3">
+          <h4 class="font-mono text-[11px] font-bold text-expo-ink uppercase tracking-wider">Sistem</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#" class="text-expo-body hover:text-expo-textLink">PSS-10 standard</a></li>
+            <li><a href="#" class="text-expo-body hover:text-expo-textLink">Random Forest Engine</a></li>
+            <li><a href="#" class="text-expo-body hover:text-expo-textLink">AI Counseling</a></li>
+          </ul>
+        </div>
+        <div class="space-y-3">
+          <h4 class="font-mono text-[11px] font-bold text-expo-ink uppercase tracking-wider">Riset</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#" class="text-expo-body hover:text-expo-textLink">Dataset</a></li>
+            <li><a href="#" class="text-expo-body hover:text-expo-textLink">Metodologi</a></li>
+            <li><a href="#" class="text-expo-body hover:text-expo-textLink">Akurasi Validasi</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-[1200px] mx-auto mt-12 pt-8 border-t border-expo-hairline text-center text-[11px] text-expo-body">
+      &copy; 2026 Stressgraph Student Wellbeing System. Seluruh hak cipta dilindungi undang-undang.
+    </div>
+  </footer>
+
+  <script src="./config.js"></script>
+
+  <!-- JavaScript Logical Implementation -->
+  <script>
+    // System configurations and constant values
+    const AUTH_STORAGE_KEY = "stressgraph.auth.v1";
+    const SESSION_STORAGE_KEY = "stressgraph.session.v1";
+    const HISTORY_STORAGE_KEY = "stressgraph.history.v1";
+
+    async function apiCall(path, options = {}) {
+      try {
+        const res = await fetch(`${API_BASE_URL}${path}`, {
+          headers: { "Content-Type": "application/json" },
+          ...options,
+        });
+        if (!res.ok) {
+          const errText = await res.text().catch(() => "");
+          let message = `Request gagal (${res.status})`;
+          if (errText) {
+            try {
+              const errBody = JSON.parse(errText);
+              message = errBody.detail || errBody.message || errText;
+            } catch {
+              message = errText;
+            }
+          }
+          throw new Error(message);
+        }
+        return await res.json();
+      } catch (err) {
+        console.error("API error:", err);
+        throw err;
+      }
+    }
+
+    const APP_STATE = {
+      nama: "",
+      jurusan: "",
+      assessmentId: null,
+      currentQuestionIndex: 0,
+      answers: new Array(10).fill(null),
+      pssScore: 0,
+      pssCategory: "Sedang",
+      mlFeatures: {},
+      mlCategory: "Rendah",
+      mlConfidence: 0,
+      chatHistory: [],
+      currentMLTab: "Mental & Fisik",
+      user: null,
+      authMode: "guest",
+      history: [],
+    };
+
+    const REVERSE_SCORED_INDEXES = [3, 4, 6, 7];
+    let QUESTIONS_DB = [];
+
+    let LIKERT_LABELS = [
+      "Tidak Pernah",
+      "Hampir Tidak Pernah",
+      "Kadang-kadang",
+      "Sering",
+      "Sangat Sering"
+    ];
+
+    // Expanded 20 Bio-Psycho-Social-Academic Variables
+    const ML_FEATURES_SCHEMA = [
+      // 1. Kategori: Mental & Fisik (8 Indikator)
+      { id: "anxiety_level", label: "Tingkat Kecemasan Harian (0-21)", min: 0, max: 21, default: 8, cat: "Mental & Fisik" },
+      { id: "self_esteem", label: "Tingkat Kepercayaan Diri (0-30)", min: 0, max: 30, default: 18, cat: "Mental & Fisik" },
+      { id: "mental_health_history", label: "Riwayat Masalah Kesehatan Mental (0=Tidak, 1=Ada)", min: 0, max: 1, default: 0, cat: "Mental & Fisik" },
+      { id: "depression", label: "Tingkat Gejala Depresi (0-27)", min: 0, max: 27, default: 6, cat: "Mental & Fisik" },
+      { id: "headache", label: "Intensitas Sakit Kepala (0-5)", min: 0, max: 5, default: 1, cat: "Mental & Fisik" },
+      { id: "blood_pressure", label: "Tekanan Darah (1=Normal, 2=Sedikit Tinggi, 3=Tinggi)", min: 1, max: 3, default: 1, cat: "Mental & Fisik" },
+      { id: "sleep_quality", label: "Kualitas Tidur Keseharian (0-5)", min: 0, max: 5, default: 3, cat: "Mental & Fisik" },
+      { id: "breathing_problem", label: "Masalah Pernapasan / Nafas Pendek (0-5)", min: 0, max: 5, default: 1, cat: "Mental & Fisik" },
+      
+      // 2. Kategori: Akademik & Karir (6 Indikator)
+      { id: "academic_performance", label: "Performa Akademik Saat Ini (0-5)", min: 0, max: 5, default: 3, cat: "Akademik & Karir" },
+      { id: "study_load", label: "Beban Studi & Tekanan Tugas (0-5)", min: 0, max: 5, default: 4, cat: "Akademik & Karir" },
+      { id: "teacher_student_relationship", label: "Hubungan Dosen & Mahasiswa (0-5)", min: 0, max: 5, default: 3, cat: "Akademik & Karir" },
+      { id: "future_career_concerns", label: "Kekhawatiran Karir Masa Depan (0-5)", min: 0, max: 5, default: 3, cat: "Akademik & Karir" },
+      { id: "extracurricular_activities", label: "Keaktifan Kegiatan Ekstrakurikuler (0-5)", min: 0, max: 5, default: 2, cat: "Akademik & Karir" },
+      { id: "peer_pressure", label: "Tekanan Komparasi Teman Sebaya (0-5)", min: 0, max: 5, default: 2, cat: "Akademik & Karir" },
+
+      // 3. Kategori: Lingkungan & Sosial (6 Indikator)
+      { id: "social_support", label: "Dukungan Sosial Keluarga/Sahabat (0-3)", min: 0, max: 3, default: 2, cat: "Lingkungan & Sosial" },
+      { id: "safety", label: "Rasa Aman di Lingkungan Tinggal (0-5)", min: 0, max: 5, default: 4, cat: "Lingkungan & Sosial" },
+      { id: "basic_needs", label: "Pemenuhan Kebutuhan Finansial Dasar (0-5)", min: 0, max: 5, default: 4, cat: "Lingkungan & Sosial" },
+      { id: "noise_level", label: "Kebisingan Lingkungan Kamar/Kos (0-5)", min: 0, max: 5, default: 2, cat: "Lingkungan & Sosial" },
+      { id: "living_conditions", label: "Kelayakan Kamar & Tempat Tinggal (0-5)", min: 0, max: 5, default: 4, cat: "Lingkungan & Sosial" },
+      { id: "bullying", label: "Pengalaman Perundungan / Bullying (0-5)", min: 0, max: 5, default: 0, cat: "Lingkungan & Sosial" }
+    ];
+
+    const CRISIS_HOTWORDS = [
+      "bunuh diri", "ingin mati", "mengakhiri hidup", "self harm", "menyakiti diri", 
+      "iris pergelangan", "potong urat", "gantung diri", "minum racun", "lompat dari gedung"
+    ];
+
+    let chartInstance = null;
+
+    function getStoredUsers() {
+      try {
+        return JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveStoredUsers(users) {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(users));
+    }
+
+    function saveSession(session) {
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    }
+
+    function loadSession() {
+      try {
+        return JSON.parse(localStorage.getItem(SESSION_STORAGE_KEY) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function clearSession() {
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+    }
+
+    function getStoredHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveStoredHistory(history) {
+      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+    }
+
+    function syncAuthUI() {
+      const loggedInState = document.getElementById("auth-loggedin-state");
+      const formState = document.getElementById("auth-form-state");
+      if (!loggedInState || !formState) return;
+
+      if (APP_STATE.user) {
+        const name = APP_STATE.user.name || APP_STATE.user.email || "Pengguna";
+        const role = APP_STATE.authMode === "guest" ? "MODE TAMU" : "AKUN TERHUBUNG";
+        document.getElementById("auth-user-name").textContent = name;
+        document.getElementById("auth-user-role").textContent = role;
+        loggedInState.classList.remove("hidden");
+        formState.classList.add("hidden");
+      } else {
+        loggedInState.classList.add("hidden");
+        formState.classList.remove("hidden");
+      }
+    }
+
+    function showAuthToast(message, type = "info") {
+      const toast = document.getElementById("auth-toast");
+      if (!toast) return;
+      const icons = {
+        success: "✓",
+        error: "⚠",
+        info: "ℹ",
+      };
+      toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || icons.info}</span>
+        <span>${message}</span>
+      `;
+      toast.className = `auth-toast ${type}`;
+      toast.classList.remove("hidden");
+      clearTimeout(toast.dismissTimeout);
+      toast.dismissTimeout = setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 2000);
+    }
+
+    function loginUser() {
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
+
+      if (!email || !password) {
+        showAuthToast("Isi email dan kata sandi terlebih dahulu.", "error");
+        return;
+      }
+
+      const users = getStoredUsers();
+      const existing = users[email];
+      if (!existing) {
+        showAuthToast("Akun tidak ditemukan. Silakan daftar terlebih dahulu.", "error");
+        return;
+      }
+
+      if (existing.password !== password) {
+        showAuthToast("Kata sandi salah. Coba lagi.", "error");
+        return;
+      }
+
+      const profile = existing;
+      APP_STATE.user = profile;
+      APP_STATE.authMode = "user";
+      APP_STATE.history = getStoredHistory().filter(item => item.userEmail === profile.email);
+      saveSession({ user: profile, authMode: "user" });
+      syncAuthUI();
+      renderHistoryList();
+      showAuthToast("Login berhasil. Selamat datang kembali!", "success");
+    }
+
+    function registerUser() {
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
+
+      if (!email || !password) {
+        showAuthToast("Isi email dan kata sandi terlebih dahulu.", "error");
+        return;
+      }
+
+      const users = getStoredUsers();
+      if (users[email]) {
+        showAuthToast("Email sudah terdaftar. Silakan masuk menggunakan akun Anda.", "error");
+        return;
+      }
+
+      const profile = { email, name: email.split("@")[0], password };
+      users[email] = profile;
+      saveStoredUsers(users);
+
+      APP_STATE.user = profile;
+      APP_STATE.authMode = "user";
+      APP_STATE.history = getStoredHistory().filter(item => item.userEmail === profile.email);
+      saveSession({ user: profile, authMode: "user" });
+      syncAuthUI();
+      renderHistoryList();
+      showAuthToast("Akun berhasil dibuat dan Anda sudah masuk.", "success");
+    }
+
+    function continueAsGuest() {
+      const guestProfile = { email: "guest", name: "Tamu", isGuest: true };
+      APP_STATE.user = guestProfile;
+      APP_STATE.authMode = "guest";
+      APP_STATE.history = [];
+      saveSession({ user: guestProfile, authMode: "guest" });
+      syncAuthUI();
+      renderHistoryList();
+    }
+
+    function logoutUser() {
+      APP_STATE.user = null;
+      APP_STATE.authMode = "guest";
+      APP_STATE.history = [];
+      clearSession();
+      syncAuthUI();
+      renderHistoryList();
+      clearUrlQuery();
+      closeResultMenu();
+      goToView('landing');
+    }
+
+    function saveAssessmentToHistory() {
+      if (!APP_STATE.user) return;
+
+      const history = getStoredHistory();
+      const duplicate = history.some(item => item.assessmentId && item.assessmentId === APP_STATE.assessmentId);
+      if (duplicate) return;
+
+      const entry = {
+        assessmentId: APP_STATE.assessmentId,
+        userEmail: APP_STATE.authMode === "user" ? APP_STATE.user.email : null,
+        userType: APP_STATE.authMode === "guest" ? "guest" : "user",
+        name: APP_STATE.authMode === "guest" ? "Guest Test" : (APP_STATE.nama || "Pengguna"),
+        jurusan: APP_STATE.jurusan || "-",
+        createdAt: new Date().toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }),
+        pssScore: APP_STATE.pssScore,
+        pssCategory: APP_STATE.pssCategory,
+        mlConfidence: APP_STATE.mlConfidence,
+        mlCategory: APP_STATE.mlCategory,
+      };
+
+      const nextHistory = [entry, ...history].slice(0, 6);
+      saveStoredHistory(nextHistory);
+      APP_STATE.history = nextHistory.filter(item => APP_STATE.authMode === "guest" ? item.userType === "guest" : item.userEmail === APP_STATE.user.email);
+      renderHistoryList();
+    }
+
+    function renderHistoryList() {
+      const list = document.getElementById("history-list");
+      const count = document.getElementById("history-count");
+      if (!list || !count) return;
+
+      const items = APP_STATE.history || [];
+      count.textContent = `${items.length} item`;
+
+      if (!items.length) {
+        list.innerHTML = `<div class="rounded-xl border border-dashed border-expo-hairline bg-expo-canvasSoft p-4 text-sm text-expo-body">Belum ada hasil yang tersimpan. Selesaikan tes untuk membuat riwayat personal.</div>`;
+        return;
+      }
+
+      list.innerHTML = items.map(item => `
+        <div class="rounded-xl border border-expo-hairline bg-expo-canvasSoft p-4">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <div class="font-semibold text-expo-ink">${item.name}</div>
+              <div class="text-xs text-expo-body">${item.jurusan || "-"}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-semibold text-expo-ink">${item.pssScore}/40</div>
+              <div class="text-[11px] text-expo-body">${item.pssCategory}</div>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-[11px] text-expo-body font-mono uppercase tracking-wider">
+            <span>${item.createdAt}</span>
+            <span>${item.mlConfidence}% • ${item.mlCategory}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function initializeAuth() {
+      const session = loadSession();
+      if (session?.user) {
+        APP_STATE.user = session.user;
+        APP_STATE.authMode = session.authMode || "user";
+        if (APP_STATE.authMode === "guest") {
+          APP_STATE.history = [];
+        } else {
+          APP_STATE.history = getStoredHistory().filter(item => item.userEmail === APP_STATE.user.email);
+        }
+      }
+      syncAuthUI();
+      renderHistoryList();
+    }
+
+    // View Navigation Handler
+    function clearUrlQuery() {
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+      }
+    }
+
+    function goToView(viewId) {
+      const sections = Array.from(document.querySelectorAll('main > section'));
+      const target = document.getElementById(`view-${viewId}`);
+      if (!target) return;
+
+      sections.forEach(section => {
+        if (!section.classList.contains('hidden')) {
+          section.classList.add('page-leaving');
+          section.classList.remove('page-entering');
+        }
+      });
+
+      setTimeout(() => {
+        sections.forEach(section => {
+          section.classList.add('hidden');
+          section.classList.remove('page-leaving');
+        });
+
+        target.classList.remove('hidden');
+        target.classList.add('page-entering');
+
+        requestAnimationFrame(() => {
+          target.classList.remove('page-entering');
+        });
+      }, 220);
+
+      if (viewId !== 'hasil') {
+        clearUrlQuery();
+      }
+
+      // Update Navigation step badges active state
+      document.querySelectorAll('nav div span').forEach(span => {
+        span.classList.remove('text-expo-ink', 'font-semibold');
+        const icon = span.querySelector('i');
+        if (icon) {
+          icon.classList.remove('text-expo-textLink');
+          icon.classList.add('text-expo-hairlineStrong');
+        }
+      });
+
+      let activeStepIndex = 1;
+      if (viewId === 'kuesioner') activeStepIndex = 2;
+      else if (viewId === 'ml') activeStepIndex = 3;
+      else if (viewId === 'hasil') activeStepIndex = 4;
+
+      const activeBadge = document.getElementById(`nav-step-${activeStepIndex}`);
+      if (activeBadge) {
+        activeBadge.classList.add('text-expo-ink', 'font-semibold');
+        const activeIcon = activeBadge.querySelector('i');
+        if (activeIcon) {
+          activeIcon.classList.add('text-expo-textLink');
+          activeIcon.classList.remove('text-expo-hairlineStrong');
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      const bubble = document.getElementById('ai-chat-bubble');
+      if (bubble) {
+        if (viewId === 'hasil') bubble.classList.add('visible');
+        else bubble.classList.remove('visible');
+      }
+    }
+
+    function restoreStateFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const targetView = params.get('view');
+
+      if (targetView !== 'hasil') {
+        clearUrlQuery();
+        return;
+      }
+
+      if (!params.has('assessment_id') || !params.has('pss_score') || !params.has('ml_confidence')) {
+        clearUrlQuery();
+        return;
+      }
+
+      APP_STATE.assessmentId = params.get('assessment_id') || '';
+      APP_STATE.nama = params.get('nama') || '';
+      APP_STATE.jurusan = params.get('jurusan') || '';
+      APP_STATE.pssScore = Number(params.get('pss_score')) || 0;
+      APP_STATE.pssCategory = params.get('pss_category') || '';
+      APP_STATE.mlConfidence = Number(params.get('ml_confidence')) || 0;
+      APP_STATE.mlCategory = params.get('ml_category') || '';
+
+      renderDashboardResults();
+      goToView('hasil');
+    }
+
+    // Reset Application State
+    function resetApp() {
+      APP_STATE.nama = "";
+      APP_STATE.jurusan = "";
+      APP_STATE.assessmentId = null;
+      APP_STATE.currentQuestionIndex = 0;
+      APP_STATE.answers = new Array(QUESTIONS_DB.length || 10).fill(null);
+      APP_STATE.pssScore = 0;
+      APP_STATE.chatHistory = [];
+      APP_STATE.currentMLTab = "Mental & Fisik";
+      
+      // Reset saved feature states to default
+      ML_FEATURES_SCHEMA.forEach(f => {
+        APP_STATE.mlFeatures[f.id] = f.default;
+      });
+
+      document.getElementById("input-nama").value = "";
+      document.getElementById("input-jurusan").value = "";
+      const chatMessagesEl = document.getElementById("chat-messages");
+      if (chatMessagesEl) chatMessagesEl.innerHTML = "";
+      const crisisBannerEl = document.getElementById("crisis-banner");
+      if (crisisBannerEl) crisisBannerEl.classList.add("hidden");
+      
+      const identitasStep = document.getElementById("identitas-step");
+      const quizStep = document.getElementById("quiz-step");
+      if (identitasStep) identitasStep.classList.remove("hidden");
+      if (quizStep) quizStep.classList.add("hidden");
+      
+      goToView('landing');
+    }
+
+    function restartTest() {
+      resetApp();
+      goToView('kuesioner');
+    }
+
+    function startAnalysisFlow() {
+      goToView('kuesioner');
+      if (APP_STATE.authMode === 'guest') {
+        startQuestionnaire(true);
+      }
+    }
+
+    // Questionnaire Initializer
+    async function startQuestionnaire(skipIdentity = false) {
+      const nameVal = document.getElementById("input-nama").value.trim();
+      const majorVal = document.getElementById("input-jurusan").value.trim();
+
+      if (APP_STATE.authMode === 'guest' || skipIdentity) {
+        APP_STATE.nama = "Tamu";
+        APP_STATE.jurusan = "Guest";
+      } else {
+        APP_STATE.nama = nameVal || "Mahasiswa Anonim";
+        APP_STATE.jurusan = majorVal || "Umum";
+      }
+      APP_STATE.currentQuestionIndex = 0;
+      APP_STATE.answers = new Array(10).fill(null);
+
+      try {
+        await loadQuestions();
+      } catch (err) {
+        alert("Gagal memuat daftar pertanyaan PSS-10 dari backend. Pastikan URL backend sudah benar dan server berjalan.");
+        return;
+      }
+
+      APP_STATE.answers = new Array(QUESTIONS_DB.length).fill(null);
+
+      document.getElementById("identitas-step").classList.add("hidden");
+      document.getElementById("quiz-step").classList.remove("hidden");
+      
+      renderQuizQuestion();
+    }
+
+    async function loadQuestions() {
+      if (QUESTIONS_DB.length > 0) return;
+
+      const data = await apiCall("/api/pss10/questions");
+      QUESTIONS_DB = data.questions.map((q, idx) => ({
+        text: q.text,
+        isReverse: REVERSE_SCORED_INDEXES.includes(idx),
+      }));
+
+      if (data.likert_labels && data.likert_labels.length === 5) {
+        LIKERT_LABELS = data.likert_labels;
+      }
+
+      APP_STATE.answers = new Array(QUESTIONS_DB.length).fill(null);
+    }
+
+    function renderQuizQuestion() {
+      const qIdx = APP_STATE.currentQuestionIndex;
+      const question = QUESTIONS_DB[qIdx];
+      const totalQ = QUESTIONS_DB.length;
+
+      document.getElementById("question-number").textContent = `PERTANYAAN ${String(qIdx + 1).padStart(2, "0")} / ${String(totalQ).padStart(2, "0")}`;
+      document.getElementById("question-text").textContent = question.text;
+
+      const progressPercent = ((qIdx + 1) / totalQ) * 100;
+      document.getElementById("progress-fill").style.width = `${progressPercent}%`;
+
+      const optionsBox = document.getElementById("likert-options");
+      optionsBox.innerHTML = "";
+
+      LIKERT_LABELS.forEach((label, val) => {
+        const optionBtn = document.createElement("button");
+        const isSelected = APP_STATE.answers[qIdx] === val;
+        
+        optionBtn.className = `flex items-center justify-between p-4 border rounded-lg text-left transition-all duration-150 text-sm ${
+          isSelected 
+          ? 'border-expo-ink bg-expo-canvasSoft font-semibold text-expo-ink' 
+          : 'border-expo-hairlineStrong bg-white text-expo-body hover:border-expo-ink hover:text-expo-ink'
+        }`;
+        
+        optionBtn.innerHTML = `
+          <span>${label}</span>
+          <span class="w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? 'border-expo-ink bg-expo-ink' : 'border-expo-hairlineStrong'}" >
+            ${isSelected ? '<span class="w-1.5 h-1.5 bg-white rounded-full"></span>' : ''}
+          </span>
+        `;
+        
+        optionBtn.onclick = () => selectLikertAnswer(val);
+        optionsBox.appendChild(optionBtn);
+      });
+
+      document.getElementById("btn-prev").style.visibility = qIdx === 0 ? "hidden" : "visible";
+      const nextBtn = document.getElementById("btn-next");
+      nextBtn.disabled = APP_STATE.answers[qIdx] === null;
+      nextBtn.innerHTML = qIdx === totalQ - 1 ? 'Lanjutkan ke ML <i class="fa-solid fa-circle-nodes ml-1.5"></i>' : 'Berikutnya <i class="fa-solid fa-chevron-right ml-1.5"></i>';
+    }
+
+    function selectLikertAnswer(value) {
+      APP_STATE.answers[APP_STATE.currentQuestionIndex] = value;
+      renderQuizQuestion();
+    }
+
+    function prevQuestion() {
+      if (APP_STATE.currentQuestionIndex > 0) {
+        APP_STATE.currentQuestionIndex--;
+        renderQuizQuestion();
+      }
+    }
+
+    async function nextQuestion() {
+      const isLast = APP_STATE.currentQuestionIndex === QUESTIONS_DB.length - 1;
+      if (!isLast) {
+        APP_STATE.currentQuestionIndex++;
+        renderQuizQuestion();
+      } else {
+        await submitPSS10();
+      }
+    }
+
+    function calculatePSSScore() {
+      let score = 0;
+      APP_STATE.answers.forEach((val, idx) => {
+        const q = QUESTIONS_DB[idx];
+        if (q.isReverse) {
+          score += (4 - val);
+        } else {
+          score += val;
+        }
+      });
+      APP_STATE.pssScore = score;
+      
+      if (score <= 13) APP_STATE.pssCategory = "Rendah";
+      else if (score <= 26) APP_STATE.pssCategory = "Sedang";
+      else APP_STATE.pssCategory = "Tinggi";
+    }
+
+    async function submitPSS10() {
+      const nextBtn = document.getElementById("btn-next");
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = `Memproses...`;
+
+      try {
+        calculatePSSScore();
+        const result = await apiCall("/api/pss10/submit", {
+          method: "POST",
+          body: JSON.stringify({
+            nama: APP_STATE.nama,
+            jurusan: APP_STATE.jurusan,
+            answers: APP_STATE.answers,
+          }),
+        });
+
+        APP_STATE.assessmentId = result.assessment_id;
+        APP_STATE.pssScore = result.total_score;
+        APP_STATE.pssCategory = result.category;
+
+        buildMLFormSliders();
+        goToView('ml');
+      } catch (err) {
+        console.error("submitPSS10 error", err);
+        alert(`Gagal mengirim data PSS-10 ke backend. Pastikan URL backend sudah benar dan server berjalan.\nDetail: ${err.message}`);
+      } finally {
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = APP_STATE.currentQuestionIndex === QUESTIONS_DB.length - 1
+          ? 'Lanjutkan ke ML <i class="fa-solid fa-circle-nodes ml-1.5"></i>'
+          : 'Berikutnya <i class="fa-solid fa-chevron-right ml-1.5"></i>';
+      }
+    }
+
+    // Dynamic slider builder with Category Filters
+    function buildMLFormSliders() {
+      const formBox = document.getElementById("ml-form-fields");
+      formBox.innerHTML = "";
+
+      // Filter based on selected Tab
+      const filteredFeatures = ML_FEATURES_SCHEMA.filter(f => f.cat === APP_STATE.currentMLTab);
+
+      filteredFeatures.forEach(field => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "border border-expo-hairline p-5 rounded-xl bg-white space-y-3 shadow-sm hover:shadow-soft transition-all duration-200";
+        
+        // Use previously set value or default value
+        const currentValue = APP_STATE.mlFeatures[field.id] !== undefined ? APP_STATE.mlFeatures[field.id] : field.default;
+        
+        wrapper.innerHTML = `
+          <div class="flex justify-between items-baseline">
+            <label class="text-xs font-semibold text-expo-ink uppercase tracking-wider">${field.label}</label>
+            <span id="val-display-${field.id}" class="font-mono text-sm font-bold text-expo-textLink">${currentValue}</span>
+          </div>
+          <input type="range" id="input-${field.id}" min="${field.min}" max="${field.max}" value="${currentValue}" class="w-full h-1.5 bg-expo-hairline rounded-lg appearance-none cursor-pointer accent-expo-ink" oninput="saveAndDisplaySliderVal('${field.id}', this.value)" />
+          <div class="flex justify-between text-[10px] font-mono text-expo-body uppercase">
+            <span>Min (${field.min})</span>
+            <span>Kategori: ${field.cat}</span>
+            <span>Max (${field.max})</span>
+          </div>
+        `;
+        formBox.appendChild(wrapper);
+      });
+    }
+
+    function saveAndDisplaySliderVal(fieldId, value) {
+      document.getElementById(`val-display-${fieldId}`).textContent = value;
+      APP_STATE.mlFeatures[fieldId] = parseInt(value);
+    }
+
+    function switchMLTab(tabName) {
+      // First, save all slider values of the current screen to the state
+      const currentTabFeatures = ML_FEATURES_SCHEMA.filter(f => f.cat === APP_STATE.currentMLTab);
+      currentTabFeatures.forEach(f => {
+        const el = document.getElementById(`input-${f.id}`);
+        if (el) {
+          APP_STATE.mlFeatures[f.id] = parseInt(el.value);
+        }
+      });
+
+      APP_STATE.currentMLTab = tabName;
+
+      // Update Tab CSS
+      const categories = ['Mental & Fisik', 'Akademik & Karir', 'Lingkungan & Sosial'];
+      categories.forEach(cat => {
+        const tabBtn = document.getElementById(`tab-btn-${cat}`);
+        if (cat === tabName) {
+          tabBtn.className = "px-5 py-3 text-xs font-semibold tracking-wider uppercase border-b-2 border-expo-primary text-expo-ink whitespace-nowrap transition-all duration-150";
+        } else {
+          tabBtn.className = "px-5 py-3 text-xs font-semibold tracking-wider uppercase border-b-2 border-transparent text-expo-body hover:text-expo-ink whitespace-nowrap transition-all duration-150";
+        }
+      });
+
+      buildMLFormSliders();
+    }
+
+    async function submitMLFeatures() {
+      // Ensure all current values on screen are saved before evaluation
+      ML_FEATURES_SCHEMA.forEach(field => {
+        const slider = document.getElementById(`input-${field.id}`);
+        if (slider) {
+          APP_STATE.mlFeatures[field.id] = parseInt(slider.value);
+        } else if (APP_STATE.mlFeatures[field.id] === undefined) {
+          APP_STATE.mlFeatures[field.id] = field.default;
+        }
+      });
+
+      const submitBtn = document.getElementById("btn-submit-ml");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-circle-nodes"></i> Memproses...`;
+
+      try {
+        const result = await apiCall("/api/ml/predict", {
+          method: "POST",
+          body: JSON.stringify(APP_STATE.mlFeatures),
+        });
+
+        APP_STATE.mlConfidence = result.confidence;
+        APP_STATE.mlCategory = result.predicted_category;
+
+        renderDashboardResults();
+        goToView('hasil');
+      } catch (err) {
+        console.error("submitMLFeatures error", err);
+        alert(`Gagal mengirim data ML ke backend. Pastikan URL backend sudah benar dan server berjalan.\nDetail: ${err.message}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `Hasilkan Laporan Analisis Akhir <i class="fa-solid fa-circle-nodes"></i>`;
+      }
+    }
+
+    // Dashboard Results Render & API integration
+    function renderDashboardResults() {
+      document.getElementById("result-nama-display").innerHTML = `Laporan Khusus untuk: <strong class="text-expo-ink">${APP_STATE.nama}</strong> · Program Studi: <strong class="text-expo-ink">${APP_STATE.jurusan}</strong>`;
+      
+      // Update PSS components
+      const pssScoreBox = document.getElementById("result-pss-score");
+      const pssBadge = document.getElementById("result-pss-category");
+      pssScoreBox.textContent = `${APP_STATE.pssScore}/40`;
+      pssBadge.textContent = `Stress Subjektif: ${APP_STATE.pssCategory}`;
+      
+      // Update ML components
+      const mlConfBox = document.getElementById("result-ml-confidence");
+      const mlBadge = document.getElementById("result-ml-category");
+      mlConfBox.textContent = `${APP_STATE.mlConfidence}%`;
+      mlBadge.textContent = `Indikasi Distress: ${APP_STATE.mlCategory}`;
+
+      // Reset and style badges
+      pssBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold";
+      mlBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold";
+
+      if (APP_STATE.pssCategory === "Tinggi") pssBadge.classList.add("bg-red-50", "text-red-700", "border", "border-red-200");
+      else if (APP_STATE.pssCategory === "Sedang") pssBadge.classList.add("bg-amber-50", "text-[#ab6400]", "border", "border-amber-200");
+      else pssBadge.classList.add("bg-green-50", "text-expo-success", "border", "border-green-200");
+
+      if (APP_STATE.mlCategory === "Tinggi") mlBadge.classList.add("bg-red-50", "text-red-700", "border", "border-red-200");
+      else if (APP_STATE.mlCategory === "Sedang") mlBadge.classList.add("bg-amber-50", "text-[#ab6400]", "border", "border-amber-200");
+      else mlBadge.classList.add("bg-green-50", "text-expo-success", "border", "border-green-200");
+
+      // Dynamic interpretation output based on multidimensional analysis
+      let narrative = "";
+      if (APP_STATE.pssCategory === "Tinggi" || APP_STATE.mlCategory === "Tinggi") {
+        narrative = `Berdasarkan analisis silang instrumen, terdeteksi sinyal distress yang tinggi. Penapisan PSS-10 menunjukkan tingkat stres kognitif yang membebani kapasitas adaptasi Anda, dikonfirmasi oleh model prediksi Random Forest sebesar ${APP_STATE.mlConfidence}% akibat tingginya tingkat kecemasan, gangguan kualitas tidur, beban tugas, atau kurangnya dukungan sosial sekitar. Anda sangat disarankan untuk memprioritaskan istirahat secara berjadwal dan membagi beban akademik Anda bersama konselor universitas.`;
+      } else if (APP_STATE.pssCategory === "Sedang" || APP_STATE.mlCategory === "Sedang") {
+        narrative = `Hasil pengukuran menunjukkan kondisi beban mental tingkat sedang. Anda memiliki respons kontrol koping yang cukup memadai, namun terdapat penumpukan pemicu di lingkungan harian seperti beban tugas akademik atau kecemasan karir masa depan yang perlu diwaspadai agar tidak mengalami keletihan mental (burnout). Lakukan latihan relaksasi pernapasan secara rutin.`;
+      } else {
+        narrative = `Kondisi kesehatan mental dan daya koping Anda berada pada kategori optimal. Integrasi data psikologis subjektif dan faktor biologis-lingkungan (20 variabel penentu) tidak menunjukkan indikasi distress klinis yang patologis. Tetap pertahankan keseimbangan ritme hidup antara hobi, relasi sosial, dan kewajiban akademis Anda.`;
+      }
+      document.getElementById("result-interpretation").textContent = narrative;
+
+      // Initialize results chart
+      renderInteractiveChart();
+      saveAssessmentToHistory();
+    }
+
+    function openResultsPage() {
+      if (APP_STATE.assessmentId && (APP_STATE.pssScore || APP_STATE.mlConfidence)) {
+        renderDashboardResults();
+        goToView('hasil');
+      } else {
+        alert('Silakan selesaikan pengukuran terlebih dahulu untuk membuka halaman hasil.');
+      }
+    }
+
+    function openChatPage() {
+      const params = new URLSearchParams({
+        assessment_id: APP_STATE.assessmentId || "",
+        nama: APP_STATE.nama || "",
+        jurusan: APP_STATE.jurusan || "",
+        pss_score: APP_STATE.pssScore || "",
+        pss_category: APP_STATE.pssCategory || "",
+        ml_confidence: APP_STATE.mlConfidence || "",
+        ml_category: APP_STATE.mlCategory || ""
+      });
+
+      closeResultMenu();
+      window.location.href = `chatbot.html?${params.toString()}`;
+    }
+
+    function toggleResultMenu() {
+      const panel = document.getElementById('result-menu-panel');
+      const button = document.getElementById('result-menu-button');
+      if (!panel || !button) return;
+      const isOpen = !panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', isOpen);
+      button.setAttribute('aria-expanded', String(!isOpen));
+    }
+
+    function closeResultMenu() {
+      const panel = document.getElementById('result-menu-panel');
+      const button = document.getElementById('result-menu-button');
+      if (!panel || !button) return;
+      panel.classList.add('hidden');
+      button.setAttribute('aria-expanded', 'false');
+    }
+
+    // Chart rendering logic using Chart.js
+    function renderInteractiveChart() {
+      const canvasEl = document.getElementById("resultChart");
+      const fallbackEl = document.getElementById("chart-fallback");
+
+      if (typeof Chart === "undefined") {
+        canvasEl.classList.add("hidden");
+        fallbackEl.classList.remove("hidden");
+        return;
+      }
+
+      const pssPercentage = Math.round((APP_STATE.pssScore / 40) * 100);
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(canvasEl, {
+        type: 'bar',
+        data: {
+          labels: ['Kognitif Subjektif (PSS-10 %)', 'Model Prediktif ML (Random Forest %)', 'Dukungan Sosial Pelindung (%)', 'Beban Akademik Harian (%)'],
+          datasets: [{
+            label: 'Matriks Stressgraph (%)',
+            data: [
+              pssPercentage, 
+              APP_STATE.mlConfidence, 
+              (APP_STATE.mlFeatures.social_support / 5) * 100,
+              (APP_STATE.mlFeatures.study_load / 5) * 100
+            ],
+            backgroundColor: [
+              'rgba(13, 116, 206, 0.85)',
+              'rgba(23, 29, 35, 0.9)',
+              'rgba(22, 163, 74, 0.85)',
+              'rgba(235, 142, 144, 0.85)'
+            ],
+            borderColor: [
+              '#0d74ce',
+              '#171717',
+              '#16a34a',
+              '#eb8e90'
+            ],
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: {
+                color: '#f0f0f3'
+              },
+              ticks: {
+                font: {
+                  family: 'JetBrains Mono',
+                  size: 10
+                }
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                font: {
+                  family: 'Inter',
+                  size: 11
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // AI Counseling System Setup
+    function initializeAICounselSession() {
+      const messagesBox = document.getElementById("chat-messages");
+      messagesBox.innerHTML = "";
+
+      const initialGreet = `Halo ${APP_STATE.nama}, saya adalah asisten pendukung kesehatan mental dari platform Stressgraph. 
+Berdasarkan analisis komprehensif 20 parameter ekologi Anda (Skor PSS-10: ${APP_STATE.pssScore}/40 dan probabilitas stres ML: ${APP_STATE.mlConfidence}%), mari kita diskusikan apa yang saat ini paling memberatkan pikiran Anda di kampus atau kehidupan sehari-hari? Saya di sini untuk mendengarkan tanpa menghakimi.`;
+
+      appendChatBubble("assistant", initialGreet);
+    }
+
+    function appendChatBubble(role, text) {
+      const messagesBox = document.getElementById("chat-messages");
+      const bubble = document.createElement("div");
+      
+      if (role === "user") {
+        bubble.className = "flex justify-end";
+        bubble.innerHTML = `
+          <div class="bg-expo-primary text-white px-4 py-3 rounded-2xl rounded-tr-sm max-w-[80%] shadow-sm leading-relaxed text-sm">
+            ${text}
+          </div>
+        `;
+      } else {
+        bubble.className = "flex justify-start";
+        bubble.innerHTML = `
+          <div class="bg-expo-surfaceStrong text-expo-ink px-4 py-3 rounded-2xl rounded-tl-sm max-w-[80%] border border-expo-hairline leading-relaxed text-sm whitespace-pre-wrap">
+            ${text}
+          </div>
+        `;
+      }
+
+      messagesBox.appendChild(bubble);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById("chat-input");
+      const text = input.value.trim();
+      if (!text || !APP_STATE.assessmentId) return;
+
+      appendChatBubble("user", text);
+      input.value = "";
+
+      const containsCrisis = CRISIS_HOTWORDS.some(word => text.toLowerCase().includes(word));
+      if (containsCrisis) {
+        document.getElementById("crisis-banner").classList.remove("hidden");
+      }
+
+      const typingInd = document.getElementById("chat-typing");
+      typingInd.classList.remove("hidden");
+      document.getElementById("btn-send-chat").disabled = true;
+      input.disabled = true;
+
+      try {
+        const result = await apiCall("/api/chat/message", {
+          method: "POST",
+          body: JSON.stringify({
+            assessment_id: APP_STATE.assessmentId,
+            message: text,
+          }),
+        });
+
+        typingInd.classList.add("hidden");
+        appendChatBubble("assistant", result.reply);
+      } catch (err) {
+        typingInd.classList.add("hidden");
+        appendChatBubble("assistant", "Maaf, gagal terhubung ke server chat. Coba lagi nanti.");
+      } finally {
+        document.getElementById("btn-send-chat").disabled = false;
+        input.disabled = false;
+        input.focus();
+      }
+    }
+
+    // Initialize default states on page load
+    window.onload = function() {
+      ML_FEATURES_SCHEMA.forEach(f => {
+        APP_STATE.mlFeatures[f.id] = f.default;
+      });
+      initializeAuth();
+      restoreStateFromQuery();
+    }
+  </script>
+
+</body>
+</html>
