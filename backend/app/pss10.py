@@ -27,8 +27,8 @@ Source: Cohen, S., Kamarck, T., & Mermelstein, R. (1983).
 
 from typing import List, Dict
 
-# Index pertanyaan (0-based) yang harus di-reverse-score
-REVERSE_SCORED_INDEXES = [3, 4, 6, 7]  # = pertanyaan nomor 4, 5, 7, 8
+# 0-based indexes of items that must be reverse-scored
+REVERSE_SCORED_INDEXES = [3, 4, 6, 7]  # = items 4, 5, 7, 8
 
 PSS10_QUESTIONS = [
     "In the last month, how often have you been upset because of something that happened unexpectedly?",
@@ -54,14 +54,13 @@ LIKERT_LABELS = [
 
 def calculate_pss10(answers: List[int]) -> Dict:
     """
-    Menghitung skor PSS-10 dari 10 jawaban (masing-masing 0-4).
+    Calculate a PSS-10 score from 10 answers (each 0-4).
 
     Args:
-        answers: list berisi 10 integer, masing-masing 0-4,
-                 sesuai urutan PSS10_QUESTIONS.
+        answers: list of 10 integers, each between 0-4, matching the order of PSS10_QUESTIONS.
 
     Returns:
-        dict berisi: total_score, category, dan detail per-item (untuk transparansi/debug)
+        dict with total_score, category, and per-item detail for transparency/debugging.
     """
     if len(answers) != 10:
         raise ValueError(f"PSS-10 requires exactly 10 answers, received: {len(answers)}")

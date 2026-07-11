@@ -259,8 +259,17 @@ async function submitMLFeatures() {
 // HALAMAN HASIL (langsung dari PSS-10 + ML)
 // ---------------------------------------------------------------------------
 
+function normalizeCategory(category) {
+  if (!category) return null;
+  const normalized = String(category).trim().toLowerCase();
+  if (normalized === "rendah" || normalized === "low") return "Low";
+  if (normalized === "sedang" || normalized === "moderate") return "Moderate";
+  if (normalized === "tinggi" || normalized === "high") return "High";
+  return category;
+}
+
 function getInterpretation(pssCategory, mlCategory) {
-  const categories = [pssCategory, mlCategory];
+  const categories = [normalizeCategory(pssCategory), normalizeCategory(mlCategory)];
   const high = categories.filter(c => c === "High").length;
   const moderate = categories.filter(c => c === "Moderate").length;
 
@@ -307,11 +316,12 @@ function renderFinalResult() {
 function setCategoryBadge(elementId, category) {
   const el = document.getElementById(elementId);
   if (!el) return;
-  el.textContent = category || "—";
+  const normalized = normalizeCategory(category);
+  el.textContent = normalized || "—";
   el.className = "score-category";
-  if (category === "Rendah") el.classList.add("category-rendah");
-  else if (category === "Sedang") el.classList.add("category-sedang");
-  else if (category === "Tinggi") el.classList.add("category-tinggi");
+  if (normalized === "Low") el.classList.add("category-rendah");
+  else if (normalized === "Moderate") el.classList.add("category-sedang");
+  else if (normalized === "High") el.classList.add("category-tinggi");
 }
 
 let chartInstance = null;
@@ -330,8 +340,8 @@ function renderChart(pssScore, mlConfidence, pssCategory, mlCategory) {
 
   // Warna berdasarkan kategori
   const colorMap = { Low: "#6B9080", Moderate: "#D98E3F", High: "#C0533E" };
-  const pssColor = colorMap[pssCategory] || "#0b66d1";
-  const mlColor  = colorMap[mlCategory]  || "#0b66d1";
+  const pssColor = colorMap[normalizeCategory(pssCategory)] || "#0b66d1";
+  const mlColor  = colorMap[normalizeCategory(mlCategory)]  || "#0b66d1";
 
   if (chartInstance) chartInstance.destroy();
 

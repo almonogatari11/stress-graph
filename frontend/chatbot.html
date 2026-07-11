@@ -144,27 +144,39 @@
 
     function greetUser() {
       const pssScore = state.pssScore || '-';
-      const pssCategory = state.pssCategory || 'belum lengkap';
+      const pssCategory = state.pssCategory || 'incomplete';
       const mlConfidence = state.mlConfidence || '-';
-      const mlCategory = state.mlCategory || 'belum lengkap';
+      const mlCategory = state.mlCategory || 'incomplete';
 
-      let pssNarrative = 'menunjukkan kondisi yang cukup stabil';
-      if (pssCategory === 'Tinggi') {
-        pssNarrative = 'menunjukkan beban stres yang cukup berat sehingga kamu mungkin merasa lebih lelah atau tertekan';
-      } else if (pssCategory === 'Sedang') {
-        pssNarrative = 'menunjukkan adanya tekanan yang cukup terasa, namun masih bisa ditangani dengan dukungan dan strategi yang tepat';
+      const normalizeCategory = (value) => {
+        if (!value) return null;
+        const normalized = String(value).trim().toLowerCase();
+        if (['rendah', 'low'].includes(normalized)) return 'Low';
+        if (['sedang', 'moderate'].includes(normalized)) return 'Moderate';
+        if (['tinggi', 'high'].includes(normalized)) return 'High';
+        return value;
+      };
+
+      const normalizedPssCategory = normalizeCategory(pssCategory);
+      const normalizedMlCategory = normalizeCategory(mlCategory);
+
+      let pssNarrative = 'indicates a fairly stable condition';
+      if (normalizedPssCategory === 'High') {
+        pssNarrative = 'suggests a fairly heavy stress load, so you may feel more tired or pressured';
+      } else if (normalizedPssCategory === 'Moderate') {
+        pssNarrative = 'shows noticeable pressure, but it can still be managed with support and the right strategies';
       }
 
-      let mlNarrative = 'tidak ada sinyal kekhawatiran yang terlalu kuat';
-      if (mlCategory === 'Tinggi') {
-        mlNarrative = 'memberi sinyal bahwa faktor akademik, tidur, atau dukungan sosial sedang memberi beban yang cukup besar';
-      } else if (mlCategory === 'Sedang') {
-        mlNarrative = 'menunjukkan ada beberapa faktor yang patut diperhatikan agar tetap seimbang';
+      let mlNarrative = 'does not show a particularly strong concern signal';
+      if (normalizedMlCategory === 'High') {
+        mlNarrative = 'suggests that academic, sleep, or social support factors are creating a significant burden';
+      } else if (normalizedMlCategory === 'Moderate') {
+        mlNarrative = 'shows a few factors worth monitoring to stay balanced';
       }
 
       const intro = state.nama
-        ? `Halo ${state.nama}${state.jurusan ? ` dari ${state.jurusan}` : ''}, saya melihat hasil penilaianmu hari ini: skor PSS-10 ${pssScore}/40 masuk kategori ${pssCategory}, yang ${pssNarrative}, sementara prediksi ML menunjukkan ${mlConfidence}% dengan kategori ${mlCategory}, ${mlNarrative}. Kamu sudah melangkah cukup berani untuk datang ke sini, jadi silakan ceritakan apa yang sedang kamu rasakan, saya akan mendengarkan dengan sabar dan membantu lebih personal.`
-        : `Halo, saya melihat hasil penilaianmu hari ini: skor PSS-10 ${pssScore}/40 masuk kategori ${pssCategory}, yang ${pssNarrative}, sementara prediksi ML menunjukkan ${mlConfidence}% dengan kategori ${mlCategory}, ${mlNarrative}. Kamu tidak sendirian, jadi silakan ceritakan apa yang sedang kamu rasakan, saya akan mendengarkan dengan sabar dan membantu lebih personal.`;
+        ? `Hello ${state.nama}${state.jurusan ? ` from ${state.jurusan}` : ''}, I can see your assessment results today: your PSS-10 score is ${pssScore}/40 in the ${pssCategory} category, which ${pssNarrative}, while the ML prediction shows ${mlConfidence}% with category ${mlCategory}, ${mlNarrative}. You have already been brave enough to come here, so please tell me what you are feeling right now and I will listen patiently and help you more personally.`
+        : `Hello, I can see your assessment results today: your PSS-10 score is ${pssScore}/40 in the ${pssCategory} category, which ${pssNarrative}, while the ML prediction shows ${mlConfidence}% with category ${mlCategory}, ${mlNarrative}. You are not alone, so please tell me what you are feeling right now and I will listen patiently and help you more personally.`;
       appendChatBubble('assistant', intro);
     }
 
@@ -218,7 +230,7 @@
         appendChatBubble('assistant', result.reply);
       } catch (err) {
         hideTypingIndicator();
-        appendChatBubble('assistant', 'Sorry, chat connection is currently unstable. Please try again shortly.');
+        appendChatBubble('assistant', 'Sorry, the chat connection is currently unstable. Please try again shortly.');
       } finally {
         sendBtn.disabled = false;
         input.disabled = false;

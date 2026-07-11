@@ -1,16 +1,16 @@
 """
 ai_chat.py
 ----------
-AI Chat dalam mode SUPPORTIF — bukan assessment.
+AI chat in supportive mode — not for assessment.
 
-Alur baru:
-- Hasil PSS-10 dan ML sudah ditampilkan langsung ke user
-- Chat AI hanya sebagai ruang curhat dan dukungan emosional
-- AI tidak perlu generate JSON assessment lagi
-- Kalau ada indikasi stress tinggi dari cerita user, AI bisa
-  menyarankan untuk melihat ulang hasil atau hubungi konseling
+New flow:
+- PSS-10 and ML results are already displayed to the user
+- The AI chat is only for emotional support and listening
+- The AI does not need to generate assessment JSON
+- If there are signs of high stress from the user's story, the AI can
+  suggest reviewing the results or contacting counseling
 
-Provider: Groq (utama) → Gemini (fallback otomatis)
+Provider: Groq (primary) → Gemini (automatic fallback)
 """
 
 import os
@@ -101,7 +101,7 @@ def _is_gemini_available() -> bool:
 def _make_groq_client():
     if not _is_groq_available():
         raise RuntimeError(
-            "Groq client tidak tersedia. Pastikan package 'groq' terpasang dan GROQ_API_KEY diset di backend/.env."
+            "Groq client is unavailable. Make sure the 'groq' package is installed and GROQ_API_KEY is set in backend/.env."
         )
     return Groq(api_key=GROQ_API_KEY)
 
@@ -109,15 +109,15 @@ def _make_groq_client():
 def _make_gemini_client():
     if not _is_gemini_available():
         raise RuntimeError(
-            "Gemini client tidak tersedia. Pastikan package 'google-genai' terpasang dan GEMINI_API_KEY diset di backend/.env."
+            "Gemini client is unavailable. Make sure the 'google-genai' package is installed and GEMINI_API_KEY is set in backend/.env."
         )
     return genai.Client(api_key=GEMINI_API_KEY)
 
 
 def call_groq(conversation_history: list, pss_score: int, pss_category: str) -> str:
-    """Panggil Groq API, return teks respons."""
+    """Call the Groq API and return the response text."""
     if not _is_groq_available():
-        raise RuntimeError("Groq provider tidak siap.")
+        raise RuntimeError("Groq provider is not ready.")
 
     groq_client = _make_groq_client()
     context = (
@@ -141,9 +141,9 @@ def call_groq(conversation_history: list, pss_score: int, pss_category: str) -> 
 
 
 def call_gemini(conversation_history: list, pss_score: int, pss_category: str) -> str:
-    """Panggil Gemini API, return teks respons."""
+    """Call the Gemini API and return the response text."""
     if not _is_gemini_available():
-        raise RuntimeError("Gemini provider tidak siap.")
+        raise RuntimeError("Gemini provider is not ready.")
 
     gemini_client = _make_gemini_client()
     context = (
@@ -174,7 +174,7 @@ def call_gemini(conversation_history: list, pss_score: int, pss_category: str) -
 
 def get_ai_response(conversation_history: list, pss_score: int, pss_category: str):
     """
-    Kirim pesan ke AI supportif dengan fallback Groq → Gemini.
+    Send a message to the supportive AI with Groq → Gemini fallback.
     Return dict: {"reply": str, "is_complete": False, "result_data": None}
     """
     providers = []
@@ -208,7 +208,7 @@ def get_ai_response(conversation_history: list, pss_score: int, pss_category: st
                 raise RuntimeError(f"{provider_name} returned an empty response.")
 
             if attempt > 0:
-                print(f"[OK] Berhasil via {provider_name}.")
+                print(f"[OK] Successful via {provider_name}.")
 
             return {
                 "reply": reply,
