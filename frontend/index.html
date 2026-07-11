@@ -598,13 +598,40 @@
 
       <!-- Graphical Analysis with Chart.js -->
       <div class="border border-expo-hairline bg-white p-6 rounded-xl shadow-soft mb-8">
-        <h3 class="text-sm font-semibold text-expo-ink uppercase tracking-wider mb-6">Comparative Correlation Matrix</h3>
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold text-expo-ink uppercase tracking-wider mb-3">Comparative Correlation Matrix</h3>
+          <p class="text-xs text-expo-body leading-relaxed mb-4">
+            This matrix displays <strong>4 key stress factors</strong> in percentage scale (0-100%). Each bar represents how much each factor influences your overall stress profile:
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded">
+              <span class="text-[10px] font-semibold text-blue-700">PSS-10</span>
+              <p class="text-[10px] text-blue-600 mt-1">Subjective perceived stress over past month</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded">
+              <span class="text-[10px] font-semibold text-slate-700">ML Model</span>
+              <p class="text-[10px] text-slate-600 mt-1">Predictive distress signal from 20 variables</p>
+            </div>
+            <div class="p-2 bg-green-50 border border-green-200 rounded">
+              <span class="text-[10px] font-semibold text-green-700">Social Support</span>
+              <p class="text-[10px] text-green-600 mt-1">Protective factor (higher = better buffer)</p>
+            </div>
+            <div class="p-2 bg-red-50 border border-red-200 rounded">
+              <span class="text-[10px] font-semibold text-red-700">Study Load</span>
+              <p class="text-[10px] text-red-600 mt-1">Academic workload stress trigger</p>
+            </div>
+          </div>
+        </div>
         <div class="relative h-[250px] w-full">
           <canvas id="resultChart"></canvas>
             <div id="chart-fallback" class="hidden absolute inset-0 flex items-center justify-center bg-expo-canvasSoft text-xs text-expo-body">
             Chart visualization requires a working Chart.js module.
           </div>
         </div>
+        <p class="text-xs text-expo-body mt-4">
+          <strong>Interpretation Hint:</strong> Green (high social support) acts as a <em>protective shield</em> against red/blue (stress factors). 
+          If red/blue bars are tall but green is short, you need to strengthen your support network.
+        </p>
       </div>
 
       <!-- Insight Narrative Interpretation -->
@@ -1428,6 +1455,23 @@
       }
     }
 
+    // Analyze correlation between stress factors and protective support
+    function getCorrelationInsight() {
+      const riskScore = (APP_STATE.mlConfidence + ((APP_STATE.mlFeatures.study_load || 3) / 5) * 100) / 2;
+      const protectionScore = ((APP_STATE.mlFeatures.social_support || 2) / 5) * 100;
+      const protectionGap = riskScore - protectionScore;
+
+      if (protectionGap > 40) {
+        return `[CORRELATION ALERT] Your stress exposure (${riskScore.toFixed(0)}%) significantly exceeds your protective social support (${protectionScore.toFixed(0)}%), creating a risk-protection imbalance. PRIORITY ACTION: Strengthen your support network by reaching out to trusted peers, study groups, or campus counseling to build resilience against burnout.`;
+      } else if (protectionGap > 20) {
+        return `[FACTOR ANALYSIS] While your social support level (${protectionScore.toFixed(0)}%) provides some buffer, it may not fully cover your current stress exposure (${riskScore.toFixed(0)}%). Consider deepening key relationships or joining academic communities to increase protective factors.`;
+      } else if (protectionScore >= 60) {
+        return `[PROTECTIVE STRENGTH] Your strong social support network (${protectionScore.toFixed(0)}%) is effectively buffering stress factors. Maintain and nurture these relationships as your primary resilience source during challenging academic periods.`;
+      } else {
+        return `[FACTOR BALANCE] Your protective factors and stress exposure are relatively aligned. Continue monitoring your stress triggers while maintaining current support relationships.`;
+      }
+    }
+
     // Dashboard Results Render & API integration
     function renderDashboardResults() {
       document.getElementById("result-nama-display").innerHTML = `Report for: <strong class="text-expo-ink">${APP_STATE.nama}</strong> · Study Program: <strong class="text-expo-ink">${APP_STATE.jurusan}</strong>`;
@@ -1465,6 +1509,11 @@
       } else {
         narrative = `Your mental health and coping capacity appear to be in an optimal range. The integration of subjective psychological data and biological-environmental factors (20 determining variables) does not indicate clinically significant distress. Continue maintaining a healthy balance between hobbies, social relationships, and academic responsibilities.`;
       }
+      
+      // Add correlation matrix insight about protective factors
+      const correlationInsight = getCorrelationInsight();
+      narrative += ` ${correlationInsight}`;
+      
       document.getElementById("result-interpretation").textContent = narrative;
 
       // Initialize results chart
