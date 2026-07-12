@@ -832,6 +832,15 @@
 
     let chartInstance = null;
 
+    function normalizeCategory(value) {
+      if (value === null || value === undefined || value === "") return null;
+      const normalized = String(value).trim().toLowerCase();
+      if (["rendah", "low"].includes(normalized)) return "Low";
+      if (["sedang", "moderate"].includes(normalized)) return "Moderate";
+      if (["tinggi", "high"].includes(normalized)) return "High";
+      return String(value).trim();
+    }
+
     function getStoredUsers() {
       try {
         return JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY) || "{}");
