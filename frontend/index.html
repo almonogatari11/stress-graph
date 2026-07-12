@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stressgraph — Premium UI/UX Design System Specification</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
   <!-- Google Fonts: Inter & JetBrains Mono as per DESIGN-expo.md -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -821,8 +822,12 @@
     ];
 
     const CRISIS_HOTWORDS = [
-      "bunuh diri", "ingin mati", "mengakhiri hidup", "self harm", "menyakiti diri", 
-      "iris pergelangan", "potong urat", "gantung diri", "minum racun", "lompat dari gedung"
+      // Indonesian
+      "bunuh diri", "ingin mati", "mengakhiri hidup", "menyakiti diri", "iris pergelangan", "potong urat", "gantung diri", "minum racun", "lompat dari gedung",
+      // English
+      "suicide", "suicidal", "kill myself", "end my life", "want to die", "i want to die", "hurt myself", "self-harm", "self harm",
+      // methods / variations
+      "cut myself", "cutting", "hang myself", "poison myself", "jump off", "jump from building"
     ];
 
     let chartInstance = null;
@@ -1480,13 +1485,15 @@
       const pssScoreBox = document.getElementById("result-pss-score");
       const pssBadge = document.getElementById("result-pss-category");
       pssScoreBox.textContent = `${APP_STATE.pssScore}/40`;
-      pssBadge.textContent = `Subjective Stress: ${APP_STATE.pssCategory}`;
+      const normalizedPss = normalizeCategory(APP_STATE.pssCategory) || APP_STATE.pssCategory || "—";
+      pssBadge.textContent = `Subjective Stress: ${normalizedPss}`;
       
       // Update ML components
       const mlConfBox = document.getElementById("result-ml-confidence");
       const mlBadge = document.getElementById("result-ml-category");
       mlConfBox.textContent = `${APP_STATE.mlConfidence}%`;
-      mlBadge.textContent = `Distress Indicator: ${APP_STATE.mlCategory}`;
+      const normalizedMl = normalizeCategory(APP_STATE.mlCategory) || APP_STATE.mlCategory || "—";
+      mlBadge.textContent = `Distress Indicator: ${normalizedMl}`;
 
       // Reset and style badges
       pssBadge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold";

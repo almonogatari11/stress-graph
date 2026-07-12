@@ -21,8 +21,12 @@ const state = {
 };
 
 const CRISIS_KEYWORDS = [
-  "bunuh diri", "mengakhiri hidup", "menyakiti diri", "self harm",
-  "ingin mati", "tidak ingin hidup", "mengakhiri semuanya"
+  // Indonesian
+  "bunuh diri", "mengakhiri hidup", "menyakiti diri", "ingin mati", "tidak ingin hidup", "mengakhiri semuanya",
+  // English equivalents and common phrases
+  "suicide", "suicidal", "kill myself", "end my life", "want to die", "i want to die", "hurt myself", "self-harm", "self harm",
+  // methods (helpful to catch urgent phrases)
+  "cut myself", "cutting", "hang myself", "poison myself", "jump off", "jump from building",
 ];
 
 // ---------------------------------------------------------------------------
@@ -245,7 +249,6 @@ async function submitMLFeatures() {
     state.mlResult = result;
     state.mlFeatures = featureValues;
 
-    // ✅ LANGSUNG ke halaman hasil tanpa perlu chat dulu
     renderFinalResult();
     goToView("hasil");
   } catch (err) {

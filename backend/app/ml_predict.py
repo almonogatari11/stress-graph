@@ -33,7 +33,7 @@ FEATURES_PATH = os.path.join(BASE_DIR, "stress_model_features.pkl")
 _model = joblib.load(MODEL_PATH)
 _features = joblib.load(FEATURES_PATH)
 
-LABEL_MAP = {0: "Rendah", 1: "Sedang", 2: "Tinggi"}
+LABEL_MAP = {0: "Low", 1: "Moderate", 2: "High"}
 
 
 def predict_stress(feature_values: dict) -> dict:
@@ -62,9 +62,9 @@ def predict_stress(feature_values: dict) -> dict:
         "predicted_category": LABEL_MAP[predicted_label],
         "confidence": round(float(proba[predicted_label]) * 100, 1),
         "probabilities": {
-            "Rendah": round(float(proba[0]) * 100, 1),
-            "Sedang": round(float(proba[1]) * 100, 1),
-            "Tinggi": round(float(proba[2]) * 100, 1),
+            "Low": round(float(proba[0]) * 100, 1),
+            "Moderate": round(float(proba[1]) * 100, 1),
+            "High": round(float(proba[2]) * 100, 1),
         }
     }
 

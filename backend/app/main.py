@@ -261,15 +261,15 @@ def finalize_assessment(assessment_id: int, db: Session = Depends(get_db)):
 
     # Tambahkan perintah eksplisit sebagai pesan user terakhir
     finalize_instruction = (
-        "Berdasarkan seluruh percakapan kita, tolong berikan hasil penilaian akhirnya sekarang. "
-        "Tulis HANYA blok JSON berikut tanpa teks apapun sebelum atau sesudahnya:\n\n"
+        "Based on the entire conversation, please provide the final assessment now. "
+        "Write ONLY the JSON block below with no extra text before or after:\n\n"
         "```json\n"
         "{\n"
-        '  "assessment_complete": true,\n'
-        '  "adjusted_score": <angka 0-100>,\n'
-        '  "category": "<Rendah|Sedang|Tinggi>",\n'
-        '  "summary": "<ringkasan 2-3 kalimat>",\n'
-        '  "recommendation": "<rekomendasi 2-4 kalimat>"\n'
+        "  \"assessment_complete\": true,\n"
+        "  \"adjusted_score\": <number 0-100>,\n"
+        "  \"category\": \"<Low|Moderate|High>\",\n"
+        "  \"summary\": \"<brief 2-3 sentence summary>\",\n"
+        "  \"recommendation\": \"<2-4 sentence recommendation>\"\n"
         "}\n"
         "```"
     )

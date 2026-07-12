@@ -58,9 +58,10 @@
         </div>
       </div>
 
-      <div id="crisis-banner" class="hidden border-t border-red-200 bg-red-50 p-4 text-sm text-red-700">
-        <strong>If the situation feels serious, don't handle it alone.</strong> Contact support services or a professional immediately.
-      </div>
+          <div id="crisis-banner" class="hidden border-t border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <strong>If the situation feels serious, don't handle it alone.</strong> Contact support services or a professional immediately.
+            <div class="mt-1 text-sm font-normal">Jika situasinya serius, jangan hadapi sendiri. Hubungi layanan dukungan atau profesional segera.</div>
+          </div>
 
       <!-- Crisis modal overlay -->
       <div id="crisis-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
@@ -84,7 +85,14 @@
 
   <script src="./config.js"></script>
   <script>
-    const CRISIS_HOTWORDS = ['bunuh diri', 'mengakhiri hidup', 'menyakiti diri', 'self harm', 'ingin mati', 'tidak ingin hidup', 'mengakhiri semuanya'];
+    const CRISIS_HOTWORDS = [
+      // Indonesian
+      'bunuh diri', 'mengakhiri hidup', 'menyakiti diri', 'ingin mati', 'tidak ingin hidup', 'mengakhiri semuanya',
+      // English
+      'suicide', 'suicidal', 'kill myself', 'end my life', 'want to die', 'i want to die', 'hurt myself', 'self-harm', 'self harm',
+      // methods / variations
+      'cut myself', 'cutting', 'hang myself', 'poison myself', 'jump off', 'jump from building'
+    ];
 
     const params = new URLSearchParams(window.location.search);
     const state = {
